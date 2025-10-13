@@ -40,7 +40,6 @@ namespace Helo.ApiClient.Send.Transactional.Batch
         /// <param name="body">The request body</param>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
-        /// <exception cref="List<global::Helo.ApiClient.Models.SendTransactionalResponse>">When receiving a 422 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
         public async Task<List<global::Helo.ApiClient.Models.SendTransactionalResponse>?> PostAsync(List<global::Helo.ApiClient.Models.SendTransactionalRequest> body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
@@ -52,11 +51,7 @@ namespace Helo.ApiClient.Send.Transactional.Batch
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
             var requestInfo = ToPostRequestInformation(body, requestConfiguration);
-            var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
-            {
-                { "422", global::Helo.ApiClient.Models.SendTransactionalResponse.CreateFromDiscriminatorValue },
-            };
-            var collectionResult = await RequestAdapter.SendCollectionAsync<global::Helo.ApiClient.Models.SendTransactionalResponse>(requestInfo, global::Helo.ApiClient.Models.SendTransactionalResponse.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            var collectionResult = await RequestAdapter.SendCollectionAsync<global::Helo.ApiClient.Models.SendTransactionalResponse>(requestInfo, global::Helo.ApiClient.Models.SendTransactionalResponse.CreateFromDiscriminatorValue, default, cancellationToken).ConfigureAwait(false);
             return collectionResult?.AsList();
         }
         /// <summary>

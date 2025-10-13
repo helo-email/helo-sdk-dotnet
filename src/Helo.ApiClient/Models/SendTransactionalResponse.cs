@@ -2,62 +2,33 @@
 #pragma warning disable CS0618
 using Microsoft.Kiota.Abstractions.Extensions;
 using Microsoft.Kiota.Abstractions.Serialization;
-using Microsoft.Kiota.Abstractions;
 using System.Collections.Generic;
 using System.IO;
 using System;
 namespace Helo.ApiClient.Models
 {
+    /// <summary>
+    /// Composed type wrapper for classes <see cref="global::Helo.ApiClient.Models.SendTransactionalResponseSendTransactionalAcceptedResponse"/>, <see cref="global::Helo.ApiClient.Models.SendTransactionalResponseSendTransactionalFailedResponse"/>
+    /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
-    #pragma warning disable CS1591
-    public partial class SendTransactionalResponse : ApiException, IAdditionalDataHolder, IParsable
-    #pragma warning restore CS1591
+    public partial class SendTransactionalResponse : IComposedTypeWrapper, IParsable
     {
-        /// <summary>Stores additional data not described in the OpenAPI description found when deserializing. Can be used for serialization as well.</summary>
-        public IDictionary<string, object> AdditionalData { get; set; }
-        /// <summary>The errorCode property</summary>
+        /// <summary>Composed type representation for type <see cref="global::Helo.ApiClient.Models.SendTransactionalResponseSendTransactionalAcceptedResponse"/></summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? ErrorCode { get; set; }
+        public global::Helo.ApiClient.Models.SendTransactionalResponseSendTransactionalAcceptedResponse? SendTransactionalResponseSendTransactionalAcceptedResponse { get; set; }
 #nullable restore
 #else
-        public string ErrorCode { get; set; }
+        public global::Helo.ApiClient.Models.SendTransactionalResponseSendTransactionalAcceptedResponse SendTransactionalResponseSendTransactionalAcceptedResponse { get; set; }
 #endif
-        /// <summary>The errorMessage property</summary>
+        /// <summary>Composed type representation for type <see cref="global::Helo.ApiClient.Models.SendTransactionalResponseSendTransactionalFailedResponse"/></summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? ErrorMessage { get; set; }
+        public global::Helo.ApiClient.Models.SendTransactionalResponseSendTransactionalFailedResponse? SendTransactionalResponseSendTransactionalFailedResponse { get; set; }
 #nullable restore
 #else
-        public string ErrorMessage { get; set; }
+        public global::Helo.ApiClient.Models.SendTransactionalResponseSendTransactionalFailedResponse SendTransactionalResponseSendTransactionalFailedResponse { get; set; }
 #endif
-        /// <summary>The primary error message.</summary>
-        public override string Message { get => base.Message; }
-        /// <summary>The messageId property</summary>
-        public Guid? MessageId { get; set; }
-        /// <summary>The status property</summary>
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
-#nullable enable
-        public string? Status { get; set; }
-#nullable restore
-#else
-        public string Status { get; set; }
-#endif
-        /// <summary>The suppressions property</summary>
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
-#nullable enable
-        public List<string>? Suppressions { get; set; }
-#nullable restore
-#else
-        public List<string> Suppressions { get; set; }
-#endif
-        /// <summary>
-        /// Instantiates a new <see cref="global::Helo.ApiClient.Models.SendTransactionalResponse"/> and sets the default values.
-        /// </summary>
-        public SendTransactionalResponse()
-        {
-            AdditionalData = new Dictionary<string, object>();
-        }
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
@@ -66,7 +37,10 @@ namespace Helo.ApiClient.Models
         public static global::Helo.ApiClient.Models.SendTransactionalResponse CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new global::Helo.ApiClient.Models.SendTransactionalResponse();
+            var result = new global::Helo.ApiClient.Models.SendTransactionalResponse();
+            result.SendTransactionalResponseSendTransactionalAcceptedResponse = new global::Helo.ApiClient.Models.SendTransactionalResponseSendTransactionalAcceptedResponse();
+            result.SendTransactionalResponseSendTransactionalFailedResponse = new global::Helo.ApiClient.Models.SendTransactionalResponseSendTransactionalFailedResponse();
+            return result;
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -74,14 +48,11 @@ namespace Helo.ApiClient.Models
         /// <returns>A IDictionary&lt;string, Action&lt;IParseNode&gt;&gt;</returns>
         public virtual IDictionary<string, Action<IParseNode>> GetFieldDeserializers()
         {
-            return new Dictionary<string, Action<IParseNode>>
+            if(SendTransactionalResponseSendTransactionalAcceptedResponse != null || SendTransactionalResponseSendTransactionalFailedResponse != null)
             {
-                { "errorCode", n => { ErrorCode = n.GetStringValue(); } },
-                { "errorMessage", n => { ErrorMessage = n.GetStringValue(); } },
-                { "messageId", n => { MessageId = n.GetGuidValue(); } },
-                { "status", n => { Status = n.GetStringValue(); } },
-                { "suppressions", n => { Suppressions = n.GetCollectionOfPrimitiveValues<string>()?.AsList(); } },
-            };
+                return ParseNodeHelper.MergeDeserializersForIntersectionWrapper(SendTransactionalResponseSendTransactionalAcceptedResponse, SendTransactionalResponseSendTransactionalFailedResponse);
+            }
+            return new Dictionary<string, Action<IParseNode>>();
         }
         /// <summary>
         /// Serializes information the current object
@@ -90,12 +61,7 @@ namespace Helo.ApiClient.Models
         public virtual void Serialize(ISerializationWriter writer)
         {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
-            writer.WriteStringValue("errorCode", ErrorCode);
-            writer.WriteStringValue("errorMessage", ErrorMessage);
-            writer.WriteGuidValue("messageId", MessageId);
-            writer.WriteStringValue("status", Status);
-            writer.WriteCollectionOfPrimitiveValues<string>("suppressions", Suppressions);
-            writer.WriteAdditionalData(AdditionalData);
+            writer.WriteObjectValue<global::Helo.ApiClient.Models.SendTransactionalResponseSendTransactionalAcceptedResponse>(null, SendTransactionalResponseSendTransactionalAcceptedResponse, SendTransactionalResponseSendTransactionalFailedResponse);
         }
     }
 }
