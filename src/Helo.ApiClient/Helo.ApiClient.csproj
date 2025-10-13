@@ -2,6 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
+        <RepositoryUrl>https://github.com/helo-email/helo-sdk-dotnet</RepositoryUrl>
     </PropertyGroup>
 
     <ItemGroup>
