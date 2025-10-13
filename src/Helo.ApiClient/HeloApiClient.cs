@@ -3,6 +3,7 @@
 using Helo.ApiClient.Activity;
 using Helo.ApiClient.Channels;
 using Helo.ApiClient.Domains;
+using Helo.ApiClient.Send;
 using Helo.ApiClient.WebhookEndpoints;
 using Microsoft.Kiota.Abstractions.Extensions;
 using Microsoft.Kiota.Abstractions;
@@ -37,6 +38,11 @@ namespace Helo.ApiClient
         {
             get => new global::Helo.ApiClient.Domains.DomainsRequestBuilder(PathParameters, RequestAdapter);
         }
+        /// <summary>The send property</summary>
+        public global::Helo.ApiClient.Send.SendRequestBuilder Send
+        {
+            get => new global::Helo.ApiClient.Send.SendRequestBuilder(PathParameters, RequestAdapter);
+        }
         /// <summary>The webhookEndpoints property</summary>
         public global::Helo.ApiClient.WebhookEndpoints.WebhookEndpointsRequestBuilder WebhookEndpoints
         {
@@ -57,7 +63,6 @@ namespace Helo.ApiClient
             ApiClientBuilder.RegisterDefaultDeserializer<FormParseNodeFactory>();
             if (string.IsNullOrEmpty(RequestAdapter.BaseUrl))
             {
-                // todo: fix this in the spec (should ultimately be set to https://api.helohq.com or equivalent)
                 RequestAdapter.BaseUrl = "http://localhost:8000";
             }
             PathParameters.TryAdd("baseurl", RequestAdapter.BaseUrl);
