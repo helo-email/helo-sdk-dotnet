@@ -4,7 +4,7 @@ using Microsoft.Kiota.Http.HttpClientLibrary;
 
 namespace Helo.ApiClient.Tests;
 
-public class HeloApiClientTests
+public class ChannelTests
 {
     [Fact]
     public async Task Channels_Create()
