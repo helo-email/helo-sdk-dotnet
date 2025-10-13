@@ -21,4 +21,33 @@ public class HeloApiClientTests
 
         Assert.NotNull(response.Id);
     }
+
+    [Fact]
+    public async Task Channels_Update()
+    {
+        var authProvider = new BaseBearerTokenAuthenticationProvider(new AccessTokenProvider());
+        var adapter = new HttpClientRequestAdapter(authProvider);
+        var client = new HeloApiClient(adapter);
+
+        var originalName = Guid.NewGuid().ToString();
+        var response = await client.Channels.PostAsync(new CreateChannelRequest
+        {
+            Name = originalName,
+            DeliveryType = DeliveryType.Live,
+        });
+
+        Assert.NotNull(response.Id);
+
+        var id = (Guid)response.Id;
+
+        var newName = Guid.NewGuid().ToString();
+        await client.Channels[id].PatchAsync(new UpdateChannelRequest
+        {
+            Name = newName,
+        });
+
+        var updated = await client.Channels[id].GetAsync();
+        Assert.NotNull(updated);
+        Assert.Equal(newName, updated.Name);
+    }
 }
