@@ -1,2 +1,1 @@
 Warning: KiotaBuilder OpenAPI warning: #/components/schemas/MailAddress/properties/email - The format email is not supported by Kiota and the string type will be used.
-Warning: KiotaBuilder Could not create error type for 422 in send_transactional_batch
