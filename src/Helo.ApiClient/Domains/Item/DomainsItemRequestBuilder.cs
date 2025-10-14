@@ -50,7 +50,9 @@ namespace Helo.ApiClient.Domains.Item
         /// </summary>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
+        /// <exception cref="global::Helo.ApiClient.Models.ErrorResponse">When receiving a 403 status code</exception>
         /// <exception cref="global::Helo.ApiClient.Models.ErrorResponse">When receiving a 404 status code</exception>
+        /// <exception cref="global::Helo.ApiClient.Models.ErrorResponse">When receiving a 500 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
         public async Task DeleteAsync(Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
@@ -63,7 +65,9 @@ namespace Helo.ApiClient.Domains.Item
             var requestInfo = ToDeleteRequestInformation(requestConfiguration);
             var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
             {
+                { "403", global::Helo.ApiClient.Models.ErrorResponse.CreateFromDiscriminatorValue },
                 { "404", global::Helo.ApiClient.Models.ErrorResponse.CreateFromDiscriminatorValue },
+                { "500", global::Helo.ApiClient.Models.ErrorResponse.CreateFromDiscriminatorValue },
             };
             await RequestAdapter.SendNoContentAsync(requestInfo, errorMapping, cancellationToken).ConfigureAwait(false);
         }
@@ -73,7 +77,9 @@ namespace Helo.ApiClient.Domains.Item
         /// <returns>A <see cref="global::Helo.ApiClient.Models.DomainWithDnsResponse"/></returns>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
+        /// <exception cref="global::Helo.ApiClient.Models.ErrorResponse">When receiving a 403 status code</exception>
         /// <exception cref="global::Helo.ApiClient.Models.ErrorResponse">When receiving a 404 status code</exception>
+        /// <exception cref="global::Helo.ApiClient.Models.ErrorResponse">When receiving a 500 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
         public async Task<global::Helo.ApiClient.Models.DomainWithDnsResponse?> GetAsync(Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
@@ -86,7 +92,9 @@ namespace Helo.ApiClient.Domains.Item
             var requestInfo = ToGetRequestInformation(requestConfiguration);
             var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
             {
+                { "403", global::Helo.ApiClient.Models.ErrorResponse.CreateFromDiscriminatorValue },
                 { "404", global::Helo.ApiClient.Models.ErrorResponse.CreateFromDiscriminatorValue },
+                { "500", global::Helo.ApiClient.Models.ErrorResponse.CreateFromDiscriminatorValue },
             };
             return await RequestAdapter.SendAsync<global::Helo.ApiClient.Models.DomainWithDnsResponse>(requestInfo, global::Helo.ApiClient.Models.DomainWithDnsResponse.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
@@ -97,8 +105,10 @@ namespace Helo.ApiClient.Domains.Item
         /// <param name="body">The request body</param>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
+        /// <exception cref="global::Helo.ApiClient.Models.ErrorResponse">When receiving a 403 status code</exception>
         /// <exception cref="global::Helo.ApiClient.Models.ErrorResponse">When receiving a 404 status code</exception>
         /// <exception cref="global::Helo.ApiClient.Models.ErrorResponse">When receiving a 422 status code</exception>
+        /// <exception cref="global::Helo.ApiClient.Models.ErrorResponse">When receiving a 500 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
         public async Task<global::Helo.ApiClient.Models.DomainResponse?> PatchAsync(global::Helo.ApiClient.Models.UpdateDomainRequest body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
@@ -112,8 +122,10 @@ namespace Helo.ApiClient.Domains.Item
             var requestInfo = ToPatchRequestInformation(body, requestConfiguration);
             var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
             {
+                { "403", global::Helo.ApiClient.Models.ErrorResponse.CreateFromDiscriminatorValue },
                 { "404", global::Helo.ApiClient.Models.ErrorResponse.CreateFromDiscriminatorValue },
                 { "422", global::Helo.ApiClient.Models.ErrorResponse.CreateFromDiscriminatorValue },
+                { "500", global::Helo.ApiClient.Models.ErrorResponse.CreateFromDiscriminatorValue },
             };
             return await RequestAdapter.SendAsync<global::Helo.ApiClient.Models.DomainResponse>(requestInfo, global::Helo.ApiClient.Models.DomainResponse.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }

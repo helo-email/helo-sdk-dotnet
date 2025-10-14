@@ -36,25 +36,29 @@ namespace Helo.ApiClient.Domains.Item.Verify
         /// <summary>
         /// Initiates the domain verification process by checking DNS records.
         /// </summary>
-        /// <returns>A <see cref="global::Helo.ApiClient.Models.DnsRecordsResponse2"/></returns>
+        /// <returns>A <see cref="global::Helo.ApiClient.Models.DnsRecordsResponse"/></returns>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
+        /// <exception cref="global::Helo.ApiClient.Models.ErrorResponse">When receiving a 403 status code</exception>
         /// <exception cref="global::Helo.ApiClient.Models.ErrorResponse">When receiving a 404 status code</exception>
+        /// <exception cref="global::Helo.ApiClient.Models.ErrorResponse">When receiving a 500 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<global::Helo.ApiClient.Models.DnsRecordsResponse2?> PostAsync(Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::Helo.ApiClient.Models.DnsRecordsResponse?> PostAsync(Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<global::Helo.ApiClient.Models.DnsRecordsResponse2> PostAsync(Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::Helo.ApiClient.Models.DnsRecordsResponse> PostAsync(Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             var requestInfo = ToPostRequestInformation(requestConfiguration);
             var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
             {
+                { "403", global::Helo.ApiClient.Models.ErrorResponse.CreateFromDiscriminatorValue },
                 { "404", global::Helo.ApiClient.Models.ErrorResponse.CreateFromDiscriminatorValue },
+                { "500", global::Helo.ApiClient.Models.ErrorResponse.CreateFromDiscriminatorValue },
             };
-            return await RequestAdapter.SendAsync<global::Helo.ApiClient.Models.DnsRecordsResponse2>(requestInfo, global::Helo.ApiClient.Models.DnsRecordsResponse2.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            return await RequestAdapter.SendAsync<global::Helo.ApiClient.Models.DnsRecordsResponse>(requestInfo, global::Helo.ApiClient.Models.DnsRecordsResponse.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
         /// Initiates the domain verification process by checking DNS records.

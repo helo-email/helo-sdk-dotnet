@@ -33,10 +33,10 @@ namespace Helo.ApiClient.Models
         /// <summary>The returnPath property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public List<global::Helo.ApiClient.Models.DnsRecordResponse2>? ReturnPath { get; set; }
+        public List<global::Helo.ApiClient.Models.DnsRecordResponse>? ReturnPath { get; set; }
 #nullable restore
 #else
-        public List<global::Helo.ApiClient.Models.DnsRecordResponse2> ReturnPath { get; set; }
+        public List<global::Helo.ApiClient.Models.DnsRecordResponse> ReturnPath { get; set; }
 #endif
         /// <summary>The tracking property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
@@ -81,7 +81,7 @@ namespace Helo.ApiClient.Models
             {
                 { "domainKeyActive", n => { DomainKeyActive = n.GetObjectValue<global::Helo.ApiClient.Models.DnsRecordResponse>(global::Helo.ApiClient.Models.DnsRecordResponse.CreateFromDiscriminatorValue); } },
                 { "domainKeyPending", n => { DomainKeyPending = n.GetObjectValue<global::Helo.ApiClient.Models.DnsRecordResponse>(global::Helo.ApiClient.Models.DnsRecordResponse.CreateFromDiscriminatorValue); } },
-                { "returnPath", n => { ReturnPath = n.GetCollectionOfObjectValues<global::Helo.ApiClient.Models.DnsRecordResponse2>(global::Helo.ApiClient.Models.DnsRecordResponse2.CreateFromDiscriminatorValue)?.AsList(); } },
+                { "returnPath", n => { ReturnPath = n.GetCollectionOfObjectValues<global::Helo.ApiClient.Models.DnsRecordResponse>(global::Helo.ApiClient.Models.DnsRecordResponse.CreateFromDiscriminatorValue)?.AsList(); } },
                 { "tracking", n => { Tracking = n.GetObjectValue<global::Helo.ApiClient.Models.DnsRecordResponse>(global::Helo.ApiClient.Models.DnsRecordResponse.CreateFromDiscriminatorValue); } },
                 { "unsubscribe", n => { Unsubscribe = n.GetObjectValue<global::Helo.ApiClient.Models.DnsRecordResponse>(global::Helo.ApiClient.Models.DnsRecordResponse.CreateFromDiscriminatorValue); } },
             };
@@ -95,7 +95,7 @@ namespace Helo.ApiClient.Models
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
             writer.WriteObjectValue<global::Helo.ApiClient.Models.DnsRecordResponse>("domainKeyActive", DomainKeyActive);
             writer.WriteObjectValue<global::Helo.ApiClient.Models.DnsRecordResponse>("domainKeyPending", DomainKeyPending);
-            writer.WriteCollectionOfObjectValues<global::Helo.ApiClient.Models.DnsRecordResponse2>("returnPath", ReturnPath);
+            writer.WriteCollectionOfObjectValues<global::Helo.ApiClient.Models.DnsRecordResponse>("returnPath", ReturnPath);
             writer.WriteObjectValue<global::Helo.ApiClient.Models.DnsRecordResponse>("tracking", Tracking);
             writer.WriteObjectValue<global::Helo.ApiClient.Models.DnsRecordResponse>("unsubscribe", Unsubscribe);
             writer.WriteAdditionalData(AdditionalData);
