@@ -1,1 +1,0 @@
-Warning: KiotaBuilder OpenAPI warning: #/components/schemas/MailAddress/properties/email - The format email is not supported by Kiota and the string type will be used.
