@@ -1,4 +1,4 @@
-namespace Helo.ApiClient.Activity
+namespace Helo.ApiClient
 {
     public enum DeliveryType
     {

@@ -1,0 +1,64 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+
+namespace Helo.ApiClient.WebhookEndpoints
+{
+    public class HeloWebhookEndpointsClient : HeloBaseClient, IHeloWebhookEndpointsClient
+    {
+        public HeloWebhookEndpointsClient([FromKeyedServices(KeyedServices.HeloApiClientName)] HttpClient httpClient,
+            ILogger<HeloWebhookEndpointsClient> logger) :
+            base(httpClient, logger)
+        {
+        }
+
+        public Task<WebhookEndpointResponse> Create(CreateWebhookEndpointRequest request) =>
+            Post<CreateWebhookEndpointRequest, WebhookEndpointResponse>("/webhook-endpoints", request);
+
+        public Task<PaginationResultOfWebhookEndpointResponse> List(int? limit = null, int? offset = null,
+            IEnumerable<string> channelIds = null)
+        {
+            var query = new List<(string, string)>
+            {
+                ("limit", limit?.ToString()),
+                ("offset", offset?.ToString()),
+            };
+            if (channelIds != null)
+                query.AddRange(channelIds.Select(id => ("channelIds", id)));
+            return Get<PaginationResultOfWebhookEndpointResponse>(BuildUrl("/webhook-endpoints", query));
+        }
+
+        public Task<WebhookEndpointResponse> Retrieve(string id) =>
+            Get<WebhookEndpointResponse>($"/webhook-endpoints/{Uri.EscapeDataString(id)}");
+
+        public Task<WebhookEndpointResponse> Update(string id, UpdateWebhookEndpointRequest request) =>
+            Patch<UpdateWebhookEndpointRequest, WebhookEndpointResponse>(
+                $"/webhook-endpoints/{Uri.EscapeDataString(id)}", request);
+
+        public new Task Delete(string id) =>
+            base.Delete($"/webhook-endpoints/{Uri.EscapeDataString(id)}");
+
+        public Task<WebhookEndpointResponse> RegenerateSigningKey(string id) =>
+            Post<WebhookEndpointResponse>($"/webhook-endpoints/{Uri.EscapeDataString(id)}/regenerate-signing-key");
+
+        private static string BuildUrl(string path, List<(string Key, string Value)> parameters)
+        {
+            var sb = new StringBuilder(path);
+            var first = true;
+            foreach (var (key, value) in parameters)
+            {
+                if (value == null) continue;
+                sb.Append(first ? '?' : '&');
+                sb.Append($"{Uri.EscapeDataString(key)}={Uri.EscapeDataString(value)}");
+                first = false;
+            }
+
+            return sb.ToString();
+        }
+    }
+}

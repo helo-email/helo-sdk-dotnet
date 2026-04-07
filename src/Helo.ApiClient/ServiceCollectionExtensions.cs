@@ -1,6 +1,11 @@
-﻿using System;
+using System;
 using Helo.ApiClient.Activity;
+using Helo.ApiClient.Broadcasts;
+using Helo.ApiClient.Channels;
+using Helo.ApiClient.Domains;
+using Helo.ApiClient.Sending;
 using Helo.ApiClient.Statistics;
+using Helo.ApiClient.WebhookEndpoints;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Helo.ApiClient
@@ -10,7 +15,12 @@ namespace Helo.ApiClient
         public static void RegisterHeloApiClients(this IServiceCollection services, string baseUrl)
         {
             services.AddTransient<IHeloActivityClient, HeloActivityClient>();
+            services.AddTransient<IHeloBroadcastsClient, HeloBroadcastsClient>();
+            services.AddTransient<IHeloChannelsClient, HeloChannelsClient>();
+            services.AddTransient<IHeloDomainsClient, HeloDomainsClient>();
+            services.AddTransient<IHeloSendingClient, HeloSendingClient>();
             services.AddTransient<IHeloStatisticsClient, HeloStatisticsClient>();
+            services.AddTransient<IHeloWebhookEndpointsClient, HeloWebhookEndpointsClient>();
             services.AddTransient<HeloApiClient>();
         }
 

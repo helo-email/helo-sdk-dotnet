@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -42,10 +43,22 @@ namespace Helo.ApiClient
                 : throw HandleError(content, response.StatusCode);
         }
 
-        protected async Task<TResponse> Post<TRequest, TResponse>(string url, TRequest body)
+        protected async Task<TResponse> Post<TResponse>(string url, Dictionary<string, string> headers = null)
         {
-            var requestContent = Serialize(body);
-            var response = await _httpClient.PostAsync(url, requestContent);
+            var request = new HttpRequestMessage(HttpMethod.Post, url);
+            AddHeaders(request, headers);
+            var response = await _httpClient.SendAsync(request);
+            var content = await response.Content.ReadAsStringAsync();
+            return response.IsSuccessStatusCode
+                ? JsonSerializer.Deserialize<TResponse>(content, SerializerOptions)
+                : throw HandleError(content, response.StatusCode);
+        }
+
+        protected async Task<TResponse> Post<TRequest, TResponse>(string url, TRequest body, Dictionary<string, string> headers = null)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Post, url) { Content = Serialize(body) };
+            AddHeaders(request, headers);
+            var response = await _httpClient.SendAsync(request);
             var content = await response.Content.ReadAsStringAsync();
             return response.IsSuccessStatusCode
                 ? JsonSerializer.Deserialize<TResponse>(content, SerializerOptions)
@@ -73,6 +86,13 @@ namespace Helo.ApiClient
                 var content = await response.Content.ReadAsStringAsync();
                 throw HandleError(content, response.StatusCode);
             }
+        }
+
+        private static void AddHeaders(HttpRequestMessage request, Dictionary<string, string> headers)
+        {
+            if (headers == null) return;
+            foreach (var kvp in headers)
+                request.Headers.Add(kvp.Key, kvp.Value);
         }
 
         private static StringContent Serialize<T>(T body) =>
