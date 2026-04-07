@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Helo.ApiClient.Channels
 {
-    public interface IHeloChannelsClient
+    public interface IChannelsClient
     {
         Task<ChannelDetailsResponse> Create(CreateChannelRequest request);
         Task<PaginationResultOfChannelBasicResponse> List(int? limit = null, int? offset = null, string name = null, IEnumerable<string> channelIds = null, DeliveryType? deliveryType = null);

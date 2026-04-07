@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Helo.ApiClient.Activity
 {
-    public interface IHeloActivityClient
+    public interface IActivityClient
     {
         Task<PaginatedEventsResponse> ListEvents(
             string channelId = null,

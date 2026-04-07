@@ -8,10 +8,10 @@ using Microsoft.Extensions.Logging;
 
 namespace Helo.ApiClient.Statistics
 {
-    public class HeloStatisticsClient : HeloBaseClient, IHeloStatisticsClient
+    public class StatisticsClient : BaseClient, IStatisticsClient
     {
-        public HeloStatisticsClient([FromKeyedServices(KeyedServices.HeloApiClientName)] HttpClient httpClient,
-            ILogger<HeloStatisticsClient> logger) :
+        public StatisticsClient([FromKeyedServices(KeyedServices.HeloApiClientName)] HttpClient httpClient,
+            ILogger<StatisticsClient> logger) :
             base(httpClient, logger)
         {
         }

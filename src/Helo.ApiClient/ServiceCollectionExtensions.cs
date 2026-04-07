@@ -14,13 +14,13 @@ namespace Helo.ApiClient
     {
         public static void RegisterHeloApiClients(this IServiceCollection services)
         {
-            services.AddTransient<IHeloActivityClient, HeloActivityClient>();
-            services.AddTransient<IHeloBroadcastsClient, HeloBroadcastsClient>();
-            services.AddTransient<IHeloChannelsClient, HeloChannelsClient>();
-            services.AddTransient<IHeloDomainsClient, HeloDomainsClient>();
-            services.AddTransient<IHeloSendingClient, HeloSendingClient>();
-            services.AddTransient<IHeloStatisticsClient, HeloStatisticsClient>();
-            services.AddTransient<IHeloWebhookEndpointsClient, HeloWebhookEndpointsClient>();
+            services.AddTransient<IActivityClient, ActivityClient>();
+            services.AddTransient<IBroadcastsClient, BroadcastsClient>();
+            services.AddTransient<IChannelsClient, ChannelsClient>();
+            services.AddTransient<IDomainsClient, DomainsClient>();
+            services.AddTransient<ISendingClient, SendingClient>();
+            services.AddTransient<IStatisticsClient, StatisticsClient>();
+            services.AddTransient<IWebhookEndpointsClient, WebhookEndpointsClient>();
             services.AddTransient<IHeloApiClient, HeloApiClient>();
         }
 

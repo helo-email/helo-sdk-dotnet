@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 
 namespace Helo.ApiClient.Sending
 {
-    public interface IHeloSendingClient
+    public interface ISendingClient
     {
         Task<SendMessageAcceptedResponse> Transactional(SendMessageRequest request, string channelId = null, string idempotencyKey = null);
         Task<SendMessageBatchResponse> TransactionalBatch(SendMessageBatchRequest request, string channelId = null, string idempotencyKey = null);

@@ -1,17 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace Helo.ApiClient.Broadcasts
 {
-    public class HeloBroadcastsClient : HeloBaseClient, IHeloBroadcastsClient
+    public class BroadcastsClient : BaseClient, IBroadcastsClient
     {
-        public HeloBroadcastsClient([FromKeyedServices(KeyedServices.HeloApiClientName)] HttpClient httpClient,
-            ILogger<HeloBroadcastsClient> logger) :
+        public BroadcastsClient([FromKeyedServices(KeyedServices.HeloApiClientName)] HttpClient httpClient,
+            ILogger<BroadcastsClient> logger) :
             base(httpClient, logger)
         {
         }

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Helo.ApiClient.WebhookEndpoints
 {
-    public interface IHeloWebhookEndpointsClient
+    public interface IWebhookEndpointsClient
     {
         Task<WebhookEndpointResponse> Create(CreateWebhookEndpointRequest request);
         Task<PaginationResultOfWebhookEndpointResponse> List(int? limit = null, int? offset = null, IEnumerable<string> channelIds = null);

@@ -10,12 +10,12 @@ namespace Helo.ApiClient
 {
     public interface IHeloApiClient
     {
-        IHeloActivityClient Activity { get; }
-        IHeloBroadcastsClient Broadcasts { get; }
-        IHeloChannelsClient Channels { get; }
-        IHeloDomainsClient Domains { get; }
-        IHeloSendingClient Sending { get; }
-        IHeloStatisticsClient Statistics { get; }
-        IHeloWebhookEndpointsClient WebhookEndpoints { get; }
+        IActivityClient Activity { get; }
+        IBroadcastsClient Broadcasts { get; }
+        IChannelsClient Channels { get; }
+        IDomainsClient Domains { get; }
+        ISendingClient Sending { get; }
+        IStatisticsClient Statistics { get; }
+        IWebhookEndpointsClient WebhookEndpoints { get; }
     }
 }

@@ -11,13 +11,13 @@ using Microsoft.Extensions.Logging;
 
 namespace Helo.ApiClient
 {
-    public class HeloBaseClient
+    public class BaseClient
     {
         private static readonly JsonSerializerOptions SerializerOptions = CreateSerializerOptions();
         private readonly HttpClient _httpClient;
         private readonly ILogger _logger;
 
-        public HeloBaseClient(HttpClient httpClient, ILogger logger)
+        public BaseClient(HttpClient httpClient, ILogger logger)
         {
             _httpClient = httpClient;
             _logger = logger;

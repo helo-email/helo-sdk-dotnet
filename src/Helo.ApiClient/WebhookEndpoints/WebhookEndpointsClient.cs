@@ -2,17 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace Helo.ApiClient.WebhookEndpoints
 {
-    public class HeloWebhookEndpointsClient : HeloBaseClient, IHeloWebhookEndpointsClient
+    public class WebhookEndpointsClient : BaseClient, IWebhookEndpointsClient
     {
-        public HeloWebhookEndpointsClient([FromKeyedServices(KeyedServices.HeloApiClientName)] HttpClient httpClient,
-            ILogger<HeloWebhookEndpointsClient> logger) :
+        public WebhookEndpointsClient([FromKeyedServices(KeyedServices.HeloApiClientName)] HttpClient httpClient,
+            ILogger<WebhookEndpointsClient> logger) :
             base(httpClient, logger)
         {
         }

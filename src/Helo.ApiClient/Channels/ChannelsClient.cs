@@ -2,17 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace Helo.ApiClient.Channels
 {
-    public class HeloChannelsClient : HeloBaseClient, IHeloChannelsClient
+    public class ChannelsClient : BaseClient, IChannelsClient
     {
-        public HeloChannelsClient([FromKeyedServices(KeyedServices.HeloApiClientName)] HttpClient httpClient,
-            ILogger<HeloChannelsClient> logger) :
+        public ChannelsClient([FromKeyedServices(KeyedServices.HeloApiClientName)] HttpClient httpClient,
+            ILogger<ChannelsClient> logger) :
             base(httpClient, logger)
         {
         }

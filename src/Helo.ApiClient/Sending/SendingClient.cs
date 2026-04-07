@@ -6,10 +6,10 @@ using Microsoft.Extensions.Logging;
 
 namespace Helo.ApiClient.Sending
 {
-    public class HeloSendingClient : HeloBaseClient, IHeloSendingClient
+    public class SendingClient : BaseClient, ISendingClient
     {
-        public HeloSendingClient([FromKeyedServices(KeyedServices.HeloApiClientName)] HttpClient httpClient,
-            ILogger<HeloSendingClient> logger) :
+        public SendingClient([FromKeyedServices(KeyedServices.HeloApiClientName)] HttpClient httpClient,
+            ILogger<SendingClient> logger) :
             base(httpClient, logger)
         {
         }

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Helo.ApiClient.Domains
 {
-    public interface IHeloDomainsClient
+    public interface IDomainsClient
     {
         Task<DomainWithDnsResponse> Create(CreateDomainRequest request);
         Task<PaginatedResponseOfDomainResponse> List(int? limit = null, int? offset = null, string name = null, IEnumerable<string> channelIds = null);

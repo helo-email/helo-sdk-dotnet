@@ -2,17 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace Helo.ApiClient.Activity
 {
-    public class HeloActivityClient : HeloBaseClient, IHeloActivityClient
+    public class ActivityClient : BaseClient, IActivityClient
     {
-        public HeloActivityClient([FromKeyedServices(KeyedServices.HeloApiClientName)] HttpClient httpClient,
-            ILogger<HeloActivityClient> logger) :
+        public ActivityClient([FromKeyedServices(KeyedServices.HeloApiClientName)] HttpClient httpClient,
+            ILogger<ActivityClient> logger) :
             base(httpClient, logger)
         {
         }

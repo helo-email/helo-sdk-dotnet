@@ -11,13 +11,13 @@ namespace Helo.ApiClient
     public class HeloApiClient : IHeloApiClient
     {
         public HeloApiClient(
-            IHeloActivityClient activity,
-            IHeloBroadcastsClient broadcasts,
-            IHeloChannelsClient channels,
-            IHeloDomainsClient domains,
-            IHeloSendingClient sending,
-            IHeloStatisticsClient statistics,
-            IHeloWebhookEndpointsClient webhookEndpoints)
+            IActivityClient activity,
+            IBroadcastsClient broadcasts,
+            IChannelsClient channels,
+            IDomainsClient domains,
+            ISendingClient sending,
+            IStatisticsClient statistics,
+            IWebhookEndpointsClient webhookEndpoints)
         {
             Activity = activity;
             Broadcasts = broadcasts;
@@ -28,12 +28,12 @@ namespace Helo.ApiClient
             WebhookEndpoints = webhookEndpoints;
         }
 
-        public IHeloActivityClient Activity { get; }
-        public IHeloBroadcastsClient Broadcasts { get; }
-        public IHeloChannelsClient Channels { get; }
-        public IHeloDomainsClient Domains { get; }
-        public IHeloSendingClient Sending { get; }
-        public IHeloStatisticsClient Statistics { get; }
-        public IHeloWebhookEndpointsClient WebhookEndpoints { get; }
+        public IActivityClient Activity { get; }
+        public IBroadcastsClient Broadcasts { get; }
+        public IChannelsClient Channels { get; }
+        public IDomainsClient Domains { get; }
+        public ISendingClient Sending { get; }
+        public IStatisticsClient Statistics { get; }
+        public IWebhookEndpointsClient WebhookEndpoints { get; }
     }
 }
