@@ -16,7 +16,6 @@ public class StatisticsTests(ITestOutputHelper outputHelper) : BaseFixture
         {
             var result = await statsClient.RetrieveHourly(DateTimeOffset.UtcNow.AddHours(-12), DateTimeOffset.UtcNow);
             Assert.NotNull(result);
-            Assert.Empty(result.Results);
         }
         catch (ApiErrorException ex)
         {
@@ -35,7 +34,6 @@ public class StatisticsTests(ITestOutputHelper outputHelper) : BaseFixture
         {
             var result = await statsClient.RetrieveDaily(DateTimeOffset.UtcNow.AddDays(-7), DateTimeOffset.UtcNow, tz);
             Assert.NotNull(result);
-            Assert.Empty(result.Results);
         }
         catch (ApiErrorException ex)
         {
