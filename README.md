@@ -15,8 +15,7 @@ dotnet add package Helo.ApiClient
 Register the Helo clients in your `Program.cs` or `Startup.cs`:
 
 ```csharp
-builder.Services.RegisterHeloHttpClient("your-api-key");
-builder.Services.RegisterHeloApiClients();
+builder.Services.AddHelo("your-api-key");
 ```
 
 Then inject `IHeloApiClient` wherever you need it:
@@ -35,6 +34,22 @@ public class EmailService(IHeloApiClient helo)
         });
     }
 }
+```
+
+If you want to use your own HttpClient, you can call `AddHeloApiClients` and inject your own HttpClient using the keyed service name (`KeyedServices.HeloApiClientName`):
+
+```csharp
+builder.Services.AddHeloApiClients();
+
+builder.Services
+    .AddHttpClient(KeyedServices.HeloApiClientName, c =>
+    {
+        c.BaseAddress = new Uri("https://api.helohq.com");
+        c.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
+
+        // additional custom configuration
+    })
+    .AddAsKeyed();
 ```
 
 ### Standalone (without DI)
@@ -126,10 +141,10 @@ catch (ApiErrorException ex)
 
 ## Configuration
 
-`RegisterHeloHttpClient` accepts an optional `baseUrl` to target a different API endpoint:
+`AddHelo` accepts an optional `baseUrl` to target a different API endpoint:
 
 ```csharp
-services.RegisterHeloHttpClient("your-api-key", baseUrl: "https://custom.api.helohq.com");
+services.AddHelo("your-api-key", baseUrl: "https://custom.api.helohq.com");
 ```
 
 ## Requirements

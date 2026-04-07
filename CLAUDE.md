@@ -26,7 +26,7 @@ This is a manually-maintained .NET client SDK for the Helo email API, targeting 
 - `HeloApiClient` / `IHeloApiClient` — Top-level facade that composes all domain clients as properties. New API domains get added as properties here and wired up in `ServiceCollectionExtensions`.
 - Domain clients (e.g., `StatisticsClient`, `ActivityClient`) — One subfolder per domain. Each client inherits `BaseClient` and calls its protected HTTP methods.
 - `BaseClient` — Handles HTTP execution, JSON deserialization, error handling, and query string building. Add new HTTP verbs here, not in individual clients.
-- `ServiceCollectionExtensions` — Two-step DI registration: `RegisterHeloHttpClient(baseUrl?)` creates the named `HttpClient` (default base URL: `https://api.helohq.com`), then `RegisterHeloApiClients()` wires up all domain clients as transient. `IHeloApiClient` is also registered as transient.
+- `ServiceCollectionExtensions` — Two-step DI registration: `AddHeloHttpClient(baseUrl?)` creates the named `HttpClient` (default base URL: `https://api.helohq.com`), then `AddHeloApiClients()` wires up all domain clients as transient. `IHeloApiClient` is also registered as transient.
 
 **Naming conventions:**
 
