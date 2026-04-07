@@ -12,7 +12,7 @@ dotnet add package Helo.ApiClient
 
 ### Dependency Injection (ASP.NET Core)
 
-Register the Helo clients in your `Program.cs` or `Startup.cs`:
+Register the Helo client(s) in your `Program.cs` or `Startup.cs`:
 
 ```csharp
 builder.Services.AddHelo("your-api-key");
