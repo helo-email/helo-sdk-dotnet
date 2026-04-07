@@ -39,18 +39,5 @@ namespace Helo.ApiClient.Broadcasts
         public Task<PaginatedResponseOfBroadcastSuppression> ListSuppressions(string id) =>
             Get<PaginatedResponseOfBroadcastSuppression>($"/broadcasts/{Uri.EscapeDataString(id)}/suppressions");
 
-        private static string BuildUrl(string path, List<(string Key, string Value)> parameters)
-        {
-            var sb = new StringBuilder(path);
-            var first = true;
-            foreach (var (key, value) in parameters)
-            {
-                if (value == null) continue;
-                sb.Append(first ? '?' : '&');
-                sb.Append($"{Uri.EscapeDataString(key)}={Uri.EscapeDataString(value)}");
-                first = false;
-            }
-            return sb.ToString();
-        }
     }
 }

@@ -44,18 +44,5 @@ namespace Helo.ApiClient.Channels
         public new Task Delete(string id) =>
             base.Delete($"/channels/{Uri.EscapeDataString(id)}");
 
-        private static string BuildUrl(string path, List<(string Key, string Value)> parameters)
-        {
-            var sb = new StringBuilder(path);
-            var first = true;
-            foreach (var (key, value) in parameters)
-            {
-                if (value == null) continue;
-                sb.Append(first ? '?' : '&');
-                sb.Append($"{Uri.EscapeDataString(key)}={Uri.EscapeDataString(value)}");
-                first = false;
-            }
-            return sb.ToString();
-        }
     }
 }

@@ -88,6 +88,20 @@ namespace Helo.ApiClient
             }
         }
 
+        protected static string BuildUrl(string path, List<(string Key, string Value)> parameters)
+        {
+            var sb = new StringBuilder(path);
+            var first = true;
+            foreach (var (key, value) in parameters)
+            {
+                if (value == null) continue;
+                sb.Append(first ? '?' : '&');
+                sb.Append($"{Uri.EscapeDataString(key)}={Uri.EscapeDataString(value)}");
+                first = false;
+            }
+            return sb.ToString();
+        }
+
         private static void AddHeaders(HttpRequestMessage request, Dictionary<string, string> headers)
         {
             if (headers == null) return;

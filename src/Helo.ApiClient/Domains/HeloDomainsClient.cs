@@ -49,18 +49,5 @@ namespace Helo.ApiClient.Domains
         public Task<DnsRecordResponse> RotateKey(string id) =>
             Post<DnsRecordResponse>($"/domains/{Uri.EscapeDataString(id)}/rotate-key");
 
-        private static string BuildUrl(string path, List<(string Key, string Value)> parameters)
-        {
-            var sb = new StringBuilder(path);
-            var first = true;
-            foreach (var (key, value) in parameters)
-            {
-                if (value == null) continue;
-                sb.Append(first ? '?' : '&');
-                sb.Append($"{Uri.EscapeDataString(key)}={Uri.EscapeDataString(value)}");
-                first = false;
-            }
-            return sb.ToString();
-        }
     }
 }
