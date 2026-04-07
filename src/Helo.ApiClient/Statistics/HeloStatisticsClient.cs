@@ -1,7 +1,14 @@
+using System.Net.Http;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+
 namespace Helo.ApiClient.Statistics
 {
-    public class HeloStatisticsClient : IHeloStatisticsClient
+    public class HeloStatisticsClient : HeloBaseClient, IHeloStatisticsClient
     {
-        // todo
+        public HeloStatisticsClient([FromKeyedServices] HttpClient httpClient, ILogger<HeloStatisticsClient> logger) :
+            base(httpClient, logger)
+        {
+        }
     }
 }
