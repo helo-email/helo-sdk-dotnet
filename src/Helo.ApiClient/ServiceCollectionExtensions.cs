@@ -12,7 +12,7 @@ namespace Helo.ApiClient
 {
     public static class ServiceCollectionExtensions
     {
-        public static void RegisterHeloApiClients(this IServiceCollection services, string baseUrl)
+        public static void RegisterHeloApiClients(this IServiceCollection services)
         {
             services.AddTransient<IHeloActivityClient, HeloActivityClient>();
             services.AddTransient<IHeloBroadcastsClient, HeloBroadcastsClient>();
@@ -21,10 +21,11 @@ namespace Helo.ApiClient
             services.AddTransient<IHeloSendingClient, HeloSendingClient>();
             services.AddTransient<IHeloStatisticsClient, HeloStatisticsClient>();
             services.AddTransient<IHeloWebhookEndpointsClient, HeloWebhookEndpointsClient>();
-            services.AddTransient<HeloApiClient>();
+            services.AddTransient<IHeloApiClient, HeloApiClient>();
         }
 
-        public static void RegisterHeloHttpClient(this IServiceCollection services, string baseUrl)
+        public static void RegisterHeloHttpClient(this IServiceCollection services,
+            string baseUrl = "https://api.helohq.com")
         {
             var baseUri = new Uri(baseUrl);
             services
