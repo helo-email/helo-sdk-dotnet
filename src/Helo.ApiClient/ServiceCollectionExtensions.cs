@@ -24,12 +24,16 @@ namespace Helo.ApiClient
             services.AddTransient<IHeloApiClient, HeloApiClient>();
         }
 
-        public static void RegisterHeloHttpClient(this IServiceCollection services,
+        public static void RegisterHeloHttpClient(this IServiceCollection services, string apiKey,
             string baseUrl = "https://api.helohq.com")
         {
             var baseUri = new Uri(baseUrl);
             services
-                .AddHttpClient(KeyedServices.HeloApiClientName, c => c.BaseAddress = baseUri)
+                .AddHttpClient(KeyedServices.HeloApiClientName, c =>
+                {
+                    c.BaseAddress = baseUri;
+                    c.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
+                })
                 .AddAsKeyed();
         }
     }

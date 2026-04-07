@@ -16,14 +16,14 @@ namespace Helo.ApiClient.Statistics
         {
         }
 
-        public Task<StatisticsHourlyResponse> RetrieveHourly(string from, string to, string channelId = null,
-            IEnumerable<string> tags = null)
+        public Task<StatisticsHourlyResponse> RetrieveHourly(DateTimeOffset from, DateTimeOffset to,
+            string channelId = null, IEnumerable<string> tags = null)
         {
             var url = BuildUrl("/activity/statistics/hourly", from, to, channelId: channelId, tags: tags);
             return Get<StatisticsHourlyResponse>(url);
         }
 
-        public Task<StatisticsDailyResponse> RetrieveDaily(string from, string to, string timezone,
+        public Task<StatisticsDailyResponse> RetrieveDaily(DateTimeOffset from, DateTimeOffset to, string timezone,
             string channelId = null, IEnumerable<string> tags = null)
         {
             var url = BuildUrl("/activity/statistics/daily", from, to, timezone: timezone, channelId: channelId,
@@ -31,18 +31,18 @@ namespace Helo.ApiClient.Statistics
             return Get<StatisticsDailyResponse>(url);
         }
 
-        public Task<StatisticsTotalsResponse> RetrieveTotals(string from, string to, string channelId = null,
-            IEnumerable<string> tags = null)
+        public Task<StatisticsTotalsResponse> RetrieveTotals(DateTimeOffset from, DateTimeOffset to,
+            string channelId = null, IEnumerable<string> tags = null)
         {
             var url = BuildUrl("/activity/statistics/totals", from, to, channelId: channelId, tags: tags);
             return Get<StatisticsTotalsResponse>(url);
         }
 
-        private static string BuildUrl(string path, string from, string to, string timezone = null,
+        private static string BuildUrl(string path, DateTimeOffset from, DateTimeOffset to, string timezone = null,
             string channelId = null, IEnumerable<string> tags = null)
         {
             var sb = new StringBuilder(path);
-            sb.Append($"?from={Uri.EscapeDataString(from)}&to={Uri.EscapeDataString(to)}");
+            sb.Append($"?from={Uri.EscapeDataString(from.ToString("O"))}&to={Uri.EscapeDataString(to.ToString("O"))}");
             if (timezone != null)
                 sb.Append($"&timezone={Uri.EscapeDataString(timezone)}");
             if (channelId != null)

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -9,8 +10,8 @@ namespace Helo.ApiClient.Activity
             string channelId = null,
             string messageId = null,
             long? after = null,
-            string startDate = null,
-            string endDate = null,
+            DateTimeOffset? startDate = null,
+            DateTimeOffset? endDate = null,
             int? limit = null,
             string recipient = null,
             string subject = null,
@@ -21,8 +22,8 @@ namespace Helo.ApiClient.Activity
         Task<PaginatedMessagesResponse> ListMessages(
             string channelId = null,
             long? after = null,
-            string startDate = null,
-            string endDate = null,
+            DateTimeOffset? startDate = null,
+            DateTimeOffset? endDate = null,
             int? limit = null,
             string recipient = null,
             string subject = null,
