@@ -80,7 +80,7 @@ var response = await helo.Sending.Transactional(new SendMessageRequest
     To = [new MailAddress { Email = "recipient@example.com" }],
     Template = new MessageTemplate
     {
-        Id = "tmpl_abc123",
+        Html = "<p>Hello {{name}}! Welcome to the {{plan}} plan!</p>",
         Variables = new { name = "Alice", plan = "Pro" },
     },
 });
