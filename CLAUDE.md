@@ -23,10 +23,15 @@ This is a manually-maintained .NET client SDK for the Helo email API, targeting 
 
 **Layer structure:**
 
-- `HeloApiClient` / `IHeloApiClient` — Top-level facade that composes domain-specific service clients. New API domains get added as properties here.
-- Service clients (e.g., `HeloStatisticsClient`) — Domain-scoped clients that inherit `HeloBaseClient` and call the HTTP methods it provides.
-- `HeloBaseClient` — Handles HTTP execution, JSON deserialization, and error handling. Currently exposes `Get<T>(url)`. New HTTP verbs (POST, PUT, etc.) should be added here.
-- `ServiceCollectionExtensions` — Two-step DI registration: `RegisterHeloHttpClient(baseUrl)` creates the named `HttpClient`, then `RegisterHeloApiClients(baseUrl)` wires up service clients as transient.
+- `HeloApiClient` / `IHeloApiClient` — Top-level facade that composes all domain clients as properties. New API domains get added as properties here and wired up in `ServiceCollectionExtensions`.
+- Domain clients (e.g., `StatisticsClient`, `ActivityClient`) — One subfolder per domain. Each client inherits `BaseClient` and calls its protected HTTP methods.
+- `BaseClient` — Handles HTTP execution, JSON deserialization, error handling, and query string building. Add new HTTP verbs here, not in individual clients.
+- `ServiceCollectionExtensions` — Two-step DI registration: `RegisterHeloHttpClient(baseUrl?)` creates the named `HttpClient` (default base URL: `https://api.helohq.com`), then `RegisterHeloApiClients()` wires up all domain clients as transient. `IHeloApiClient` is also registered as transient.
+
+**Naming conventions:**
+
+- Domain client interfaces drop the `Helo` prefix: `IActivityClient`, `IChannelsClient`, etc.
+- The top-level client retains it: `IHeloApiClient` / `HeloApiClient`.
 
 **Error handling:**
 
@@ -34,8 +39,20 @@ Non-2xx responses are thrown as `ApiErrorException`, which carries the HTTP stat
 
 **JSON serialization:**
 
-`System.Text.Json` with web defaults, `WhenWritingNull` ignore condition, and a kebab-case-lower enum converter. Options are created once as a static field on `HeloBaseClient`.
+`System.Text.Json` with web defaults, `WhenWritingNull` ignore condition, and a kebab-case-lower enum converter. Options are created once as a static field on `BaseClient`. All enums must be single-word or hyphenated values to round-trip correctly with this converter.
 
 **DI wiring:**
 
-The named `HttpClient` (`KeyedServices.HeloApiClientName = "helo-api"`) is registered via `IHttpClientFactory` and injected into service clients as a keyed service. When adding a new service client, register it in `ServiceCollectionExtensions.RegisterHeloApiClients`.
+The named `HttpClient` (`KeyedServices.HeloApiClientName = "helo-api"`) is registered via `IHttpClientFactory` and injected into domain clients as a `[FromKeyedServices]` constructor parameter.
+
+**Shared types (root namespace `Helo.ApiClient`):**
+
+Types used across multiple domains live at the root level: `MailAddress`, `DeliveryType`, `Attachment`, `AttachmentDisposition`. Domain-specific types stay in their namespace subfolder.
+
+**Query string building:**
+
+`BaseClient.BuildUrl(path, List<(string Key, string Value)>)` skips null values and URL-encodes all keys and values. Repeat-key array params (e.g., `tags`) are added as multiple tuples with the same key. The `Statistics` client uses a bespoke `BuildUrl` overload with named parameters instead.
+
+**Sending headers:**
+
+The `SendingClient` maps the optional `channelId` and `idempotencyKey` parameters to `X-Helo-Channel-Id` and `X-Helo-Idempotency-Key` HTTP headers via `BaseClient.Post` — callers never deal with raw header names.
