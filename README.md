@@ -81,7 +81,7 @@ var response = await helo.Sending.Transactional(new SendMessageRequest
     Template = new MessageTemplate
     {
         Html = "<p>Hello {{name}}! Welcome to the {{plan}} plan!</p>",
-        Variables = new { name = "Alice", plan = "Pro" },
+        Data = new { name = "Alice", plan = "Pro" },
     },
 });
 ```

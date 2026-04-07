@@ -123,7 +123,8 @@ public class SendingTests(ITestOutputHelper outputHelper) : BaseFixture
                 Template = new MessageTemplate
                 {
                     Subject = "Broadcast test",
-                    Html = "<h1>Broadcast</h1>",
+                    Html = "<p>Hello {{name}}! Welcome to the {{plan}} plan!</p>",
+                    Data = new { name = "Alice", plan = "Pro" },
                 },
             }, channelId: "241efbe3-3e50-4192-ab69-f8c9ccb10ae1");
         }
