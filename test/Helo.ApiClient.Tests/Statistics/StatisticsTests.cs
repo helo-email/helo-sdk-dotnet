@@ -4,18 +4,14 @@ using Meziantou.Extensions.Logging.Xunit.v3;
 
 namespace Helo.ApiClient.Tests.Statistics;
 
-public class StatisticsTests(ITestOutputHelper outputHelper)
+public class StatisticsTests(ITestOutputHelper outputHelper) : BaseFixture
 {
-    private static readonly HttpClient HttpClient = new()
-    {
-        BaseAddress = new Uri("http://localhost:8000"),
-        DefaultRequestHeaders = { { "Authorization", $"Bearer {Settings.DevApiKey}" } }
-    };
+    private static StatisticsClient CreateClient() => new(HttpClient, XUnitLogger.CreateLogger<StatisticsClient>());
 
     [Fact]
     public async Task RetrieveHourly_DoesNotThrow()
     {
-        var statsClient = new StatisticsClient(HttpClient, XUnitLogger.CreateLogger<StatisticsClient>());
+        var statsClient = CreateClient();
         try
         {
             var result = await statsClient.RetrieveHourly(DateTimeOffset.UtcNow.AddHours(-12), DateTimeOffset.UtcNow);
@@ -34,7 +30,7 @@ public class StatisticsTests(ITestOutputHelper outputHelper)
     [InlineData("utc")]
     public async Task RetrieveDaily_DoesNotThrow(string tz)
     {
-        var statsClient = new StatisticsClient(HttpClient, XUnitLogger.CreateLogger<StatisticsClient>());
+        var statsClient = CreateClient();
         try
         {
             var result = await statsClient.RetrieveDaily(DateTimeOffset.UtcNow.AddDays(-7), DateTimeOffset.UtcNow, tz);
@@ -51,7 +47,7 @@ public class StatisticsTests(ITestOutputHelper outputHelper)
     [Fact]
     public async Task RetrieveTotals_DoesNotThrow()
     {
-        var statsClient = new StatisticsClient(HttpClient, XUnitLogger.CreateLogger<StatisticsClient>());
+        var statsClient = CreateClient();
         try
         {
             var result = await statsClient.RetrieveTotals(DateTimeOffset.UtcNow.AddDays(-7), DateTimeOffset.UtcNow);

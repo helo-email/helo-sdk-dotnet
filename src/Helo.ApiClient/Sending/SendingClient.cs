@@ -41,9 +41,15 @@ namespace Helo.ApiClient.Sending
 
             var headers = new Dictionary<string, string>();
             if (channelId != null)
+            {
                 headers["X-Helo-Channel-Id"] = channelId;
+            }
+
             if (idempotencyKey != null)
+            {
                 headers["X-Helo-Idempotency-Key"] = idempotencyKey;
+            }
+
             return headers;
         }
     }
