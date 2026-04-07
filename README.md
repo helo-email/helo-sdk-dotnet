@@ -115,11 +115,13 @@ var response = await helo.Sending.TransactionalBatch(new SendMessageBatchRequest
 
 ### Optional Parameters
 
-All send methods accept optional `channelId` and `idempotencyKey` parameters:
+All send methods accept `channelId` and `idempotencyKey` parameters:
 
 ```csharp
 await helo.Sending.Transactional(request, channelId: "chan_abc", idempotencyKey: "order-456");
 ```
+
+If your API key is associated with a specific channel, you don't need to supply `channelId`.
 
 ## Error Handling
 
