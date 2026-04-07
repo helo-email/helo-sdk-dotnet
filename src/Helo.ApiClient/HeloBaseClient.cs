@@ -1,6 +1,7 @@
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -40,6 +41,42 @@ namespace Helo.ApiClient
                 ? JsonSerializer.Deserialize<T>(content, SerializerOptions)
                 : throw HandleError(content, response.StatusCode);
         }
+
+        protected async Task<TResponse> Post<TRequest, TResponse>(string url, TRequest body)
+        {
+            var requestContent = Serialize(body);
+            var response = await _httpClient.PostAsync(url, requestContent);
+            var content = await response.Content.ReadAsStringAsync();
+            return response.IsSuccessStatusCode
+                ? JsonSerializer.Deserialize<TResponse>(content, SerializerOptions)
+                : throw HandleError(content, response.StatusCode);
+        }
+
+        protected async Task<TResponse> Patch<TRequest, TResponse>(string url, TRequest body)
+        {
+            var request = new HttpRequestMessage(new HttpMethod("PATCH"), url)
+            {
+                Content = Serialize(body),
+            };
+            var response = await _httpClient.SendAsync(request);
+            var content = await response.Content.ReadAsStringAsync();
+            return response.IsSuccessStatusCode
+                ? JsonSerializer.Deserialize<TResponse>(content, SerializerOptions)
+                : throw HandleError(content, response.StatusCode);
+        }
+
+        protected async Task Delete(string url)
+        {
+            var response = await _httpClient.DeleteAsync(url);
+            if (!response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                throw HandleError(content, response.StatusCode);
+            }
+        }
+
+        private static StringContent Serialize<T>(T body) =>
+            new StringContent(JsonSerializer.Serialize(body, SerializerOptions), Encoding.UTF8, "application/json");
 
         private ApiErrorException HandleError(string content, HttpStatusCode statusCode)
         {
