@@ -1,4 +1,5 @@
 ﻿using System;
+using Helo.ApiClient.Activity;
 using Helo.ApiClient.Statistics;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -8,6 +9,7 @@ namespace Helo.ApiClient
     {
         public static void RegisterHeloApiClients(this IServiceCollection services, string baseUrl)
         {
+            services.AddTransient<IHeloActivityClient, HeloActivityClient>();
             services.AddTransient<IHeloStatisticsClient, HeloStatisticsClient>();
             services.AddTransient<HeloApiClient>();
         }
