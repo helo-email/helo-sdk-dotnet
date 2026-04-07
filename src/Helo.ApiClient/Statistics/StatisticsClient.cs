@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,7 +28,7 @@ namespace Helo.ApiClient.Statistics
             string channelId = null, IEnumerable<string> tags = null)
         {
             var url = BuildUrl("/activity/statistics/daily", from, to, timezone: timezone, channelId: channelId,
-                tags: tags);
+                tags: tags, dateOnly: true);
             return Get<StatisticsDailyResponse>(url);
         }
 
@@ -39,10 +40,23 @@ namespace Helo.ApiClient.Statistics
         }
 
         private static string BuildUrl(string path, DateTimeOffset from, DateTimeOffset to, string timezone = null,
-            string channelId = null, IEnumerable<string> tags = null)
+            string channelId = null, IEnumerable<string> tags = null, bool dateOnly = false)
         {
             var sb = new StringBuilder(path);
-            sb.Append($"?from={Uri.EscapeDataString(from.ToString("O"))}&to={Uri.EscapeDataString(to.ToString("O"))}");
+
+            var fromFormatted = Uri.EscapeDataString(from.ToString("O"));
+            if (dateOnly)
+            {
+                fromFormatted = fromFormatted.Split('T').First();
+            }
+
+            var toFormatted = Uri.EscapeDataString(to.ToString("O"));
+            if (dateOnly)
+            {
+                toFormatted = toFormatted.Split('T').First();
+            }
+
+            sb.Append($"?from={fromFormatted}&to={toFormatted}");
             if (timezone != null)
                 sb.Append($"&timezone={Uri.EscapeDataString(timezone)}");
             if (channelId != null)
