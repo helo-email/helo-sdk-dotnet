@@ -138,7 +138,7 @@ try
 catch (ApiErrorException ex)
 {
     Console.WriteLine($"Status: {ex.StatusCode}");
-    Console.WriteLine($"Error: {ex.ErrorResponse?.Message ?? ex.ResponseContent}");
+    Console.WriteLine($"Error: {ex.ErrorResponse.Detail}");
 }
 ```
 
