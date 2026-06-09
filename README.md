@@ -15,7 +15,8 @@ dotnet add package Helo.ApiClient
 Register the Helo client(s) in your `Program.cs` or `Startup.cs`:
 
 ```csharp
-builder.Services.AddHelo("your-api-key");
+var apiKey = Environment.GetEnvironmentVariable("HELO_API_KEY");
+builder.Services.AddHelo(apiKey);
 ```
 
 Then inject `IHeloApiClient` wherever you need it:
@@ -23,7 +24,7 @@ Then inject `IHeloApiClient` wherever you need it:
 ```csharp
 public class EmailService(IHeloApiClient helo)
 {
-    public async Task SendWelcomeEmail(string toEmail, string toName)
+    public async Task SendWelcomeEmail(string toEmail, string toName, Guid channelId)
     {
         var response = await helo.Sending.Transactional(new SendMessageRequest
         {
@@ -31,7 +32,7 @@ public class EmailService(IHeloApiClient helo)
             To = [new MailAddress { Email = toEmail, Name = toName }],
             Subject = "Welcome!",
             Html = "<h1>Welcome aboard!</h1>",
-        });
+        }, channelId);
     }
 }
 ```
@@ -83,7 +84,7 @@ var response = await helo.Sending.Transactional(new SendMessageRequest
     Html = "<p>Hello!</p>",
     Text = "Hello!",
     Tags = ["welcome", "onboarding"],
-});
+}, channelId);
 ```
 
 ### With a Template
@@ -98,7 +99,7 @@ var response = await helo.Sending.Transactional(new SendMessageRequest
         Html = "<p>Hello {{name}}! Welcome to the {{plan}} plan!</p>",
         Data = new { name = "Alice", plan = "Pro" },
     },
-});
+}, channelId);
 ```
 
 ### Batch
@@ -110,7 +111,7 @@ var response = await helo.Sending.TransactionalBatch(new SendMessageBatchRequest
         new SendMessageRequest { /* ... */ },
         new SendMessageRequest { /* ... */ },
     ],
-});
+}, channelId);
 ```
 
 ### Optional Parameters
@@ -146,7 +147,7 @@ catch (ApiErrorException ex)
 `AddHelo` accepts an optional `baseUrl` to target a different API endpoint:
 
 ```csharp
-services.AddHelo("your-api-key", baseUrl: "https://custom.api.helohq.com");
+services.AddHelo(apiKey, baseUrl: "https://custom.api.helohq.com");
 ```
 
 ## Requirements
