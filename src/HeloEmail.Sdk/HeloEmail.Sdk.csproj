@@ -10,7 +10,7 @@
         <Version>1.0.0-beta.1</Version>
         <Company>HELO EHLO LLC</Company>
         <Product>Helo</Product>
-        <PackageTags>Helo;Email;SDK;Email API</PackageTags>
+        <PackageTags>Helo;Email;SDK;EmailAPI</PackageTags>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageIcon>icon.jpg</PackageIcon>
