@@ -3,6 +3,13 @@
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
         <RepositoryUrl>https://github.com/helo-email/helo-sdk-dotnet</RepositoryUrl>
+        <PackageId>HeloEmail.Sdk</PackageId>
+        <Authors>Helo Email</Authors>
+        <Version>1.0.0-beta.1</Version>
+        <Company>HELO EHLO LLC</Company>
+        <Product>Helo</Product>
+        <PackageTags>Helo;Email;SDK;Email API</PackageTags>
+        <IsPackable>true</IsPackable>
     </PropertyGroup>
 
     <ItemGroup>
