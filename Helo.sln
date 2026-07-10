@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helo.ApiClient", "src\Helo.ApiClient\Helo.ApiClient.csproj", "{8913E10F-F207-465E-A2BC-93FA55C9B0B1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeloEmail.Sdk", "src\HeloEmail.Sdk\HeloEmail.Sdk.csproj", "{8913E10F-F207-465E-A2BC-93FA55C9B0B1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{FBAC3ACD-7538-44D1-AA69-B06456B01565}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{5C629E29-848A-40D5-A897-D375BDC3514C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helo.ApiClient.Tests", "test\Helo.ApiClient.Tests\Helo.ApiClient.Tests.csproj", "{9EAFB060-DB04-4101-BFDD-0134DC7EF322}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeloEmail.Sdk.Tests", "test\HeloEmail.Sdk.Tests\HeloEmail.Sdk.Tests.csproj", "{9EAFB060-DB04-4101-BFDD-0134DC7EF322}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

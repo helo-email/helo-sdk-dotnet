@@ -1,0 +1,12 @@
+using System.Threading.Tasks;
+
+namespace HeloEmail.Sdk.Sending
+{
+    public interface ISendingClient
+    {
+        Task<SendMessageAcceptedResponse> Transactional(SendMessageRequest request, string channelId = null, string idempotencyKey = null);
+        Task<SendMessageBatchResponse> TransactionalBatch(SendMessageBatchRequest request, string channelId = null, string idempotencyKey = null);
+        Task<SendBroadcastResponse> Broadcast(SendBroadcastRequest request, string channelId = null, string idempotencyKey = null);
+        Task<SendMessageAcceptedResponse> BroadcastMessage(SendMessageRequest request, string channelId = null, string idempotencyKey = null);
+    }
+}
