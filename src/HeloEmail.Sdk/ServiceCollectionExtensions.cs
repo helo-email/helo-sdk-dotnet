@@ -13,13 +13,26 @@ namespace HeloEmail.Sdk
 {
     public static class ServiceCollectionExtensions
     {
-        public static void AddHelo(this IServiceCollection services, string apiKey,
+        /// <summary>
+        /// Adds the Helo SDK to your service collection. If <c>apiKey</c> is not provided, it will be pulled from
+        /// the HELO_API_KEY environment variable.
+        /// </summary>
+        /// <param name="services">Service collection.</param>
+        /// <param name="apiKey">Optional API key. Pulled from HELO_API_KEY environment variable otherwise.</param>
+        /// <param name="baseUrl">Optional base URL.</param>
+        public static void AddHelo(this IServiceCollection services, string apiKey = null,
             string baseUrl = "https://api.helohq.com")
         {
+            apiKey = apiKey ?? Environment.GetEnvironmentVariable("HELO_API_KEY");
             services.AddHeloApiClients();
             services.AddHeloHttpClient(apiKey, baseUrl);
         }
 
+        /// <summary>
+        /// Adds the Helo API client classes to your service collection. This method should only be used if you
+        /// are adding an HttpClient separately. Otherwise, use the <c>AddHelo</c> method.
+        /// </summary>
+        /// <param name="services">Service collection.</param>
         public static void AddHeloApiClients(this IServiceCollection services)
         {
             services.AddTransient<IActivityClient, ActivityClient>();
@@ -33,7 +46,7 @@ namespace HeloEmail.Sdk
             services.AddTransient<IHeloApiClient, HeloApiClient>();
         }
 
-        public static void AddHeloHttpClient(this IServiceCollection services, string apiKey,
+        private static void AddHeloHttpClient(this IServiceCollection services, string apiKey,
             string baseUrl = "https://api.helohq.com")
         {
             var baseUri = new Uri(baseUrl);
