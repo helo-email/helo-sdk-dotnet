@@ -8,6 +8,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 # Build
 dotnet build
 
+# Run tests (integration — see note below)
+dotnet test
+
 # Pack for NuGet
 dotnet pack --configuration Release -p:PackageVersion=<version>
 
@@ -15,11 +18,15 @@ dotnet pack --configuration Release -p:PackageVersion=<version>
 ./scripts/publish.sh <version>
 ```
 
-There are currently no tests (the test project was removed during a rewrite).
+Tests in `test/HeloEmail.Sdk.Tests/` are xUnit v3 **integration** tests, not unit tests.
+`BaseFixture` points every client at `http://localhost:8000` with a bearer token from the
+`HeloApiKey` environment variable, and each test calls the real API. They fail with
+`Connection refused` unless a Helo API is running locally, so `dotnet test` will not pass
+in isolation — build them (they compile with the SDK) but expect a local server to run them.
 
 ## Architecture
 
-This is a manually-maintained .NET client SDK for the Helo email API, targeting `netstandard2.0`. It was migrated away from Kiota code generation to a hand-crafted implementation.
+This is a manually-maintained .NET client SDK for the Helo email API, targeting `netstandard2.0`. It was migrated away from Kiota code generation to a hand-crafted implementation. (The `generate` target in the `Makefile` still invokes Kiota but is a leftover from that setup and is no longer used — the code is written by hand.)
 
 **Layer structure:**
 
@@ -45,9 +52,9 @@ Non-2xx responses are thrown as `ApiErrorException`, which carries the HTTP stat
 
 The named `HttpClient` (`KeyedServices.HeloApiClientName = "helo-api"`) is registered via `IHttpClientFactory` and injected into domain clients as a `[FromKeyedServices]` constructor parameter.
 
-**Shared types (root namespace `Helo.ApiClient`):**
+**Namespaces:**
 
-Types used across multiple domains live at the root level: `MailAddress`, `DeliveryType`, `Attachment`, `AttachmentDisposition`. Domain-specific types stay in their namespace subfolder.
+The root namespace is `HeloEmail.Sdk`; each domain has a sub-namespace matching its folder (e.g. `HeloEmail.Sdk.Channels`, `HeloEmail.Sdk.Sending`, `HeloEmail.Sdk.Suppressions`). Types shared across domains live at the root `HeloEmail.Sdk` level — `MailAddress`, `DeliveryType`, `Attachment`, `AttachmentDisposition` — while domain-specific types (requests, responses, per-domain enums) stay in their domain sub-namespace. A client that needs an enum owned by another domain imports it (e.g. `SuppressionsClient` reuses `HeloEmail.Sdk.Activity.MailType`).
 
 **Query string building:**
 
@@ -56,3 +63,13 @@ Types used across multiple domains live at the root level: `MailAddress`, `Deliv
 **Sending headers:**
 
 The `SendingClient` maps the optional `channelId` and `idempotencyKey` parameters to `X-Helo-Channel-Id` and `X-Helo-Idempotency-Key` HTTP headers via `BaseClient.Post` — callers never deal with raw header names.
+
+## Documentation & code samples
+
+`docs/*.md` has one Markdown file per domain with a usage example for every operation. Each example is a fenced code block whose info string is the operation's OpenAPI `operationId`:
+
+    ```csharp Channels_create
+    ...
+    ```
+
+These are not only human docs. The external `helo-sdk-generator` extracts each block and embeds it into the published Helo OpenAPI spec as the C# entry under `x-codeSamples` for that operation. So the samples must be real, compilable calls against the current SDK surface, and each block's tag must be an exact spec `operationId`. When you add or change a domain method, update its `docs/` example — and add a block for any new operation — so the samples stay accurate.

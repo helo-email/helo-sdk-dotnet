@@ -5,6 +5,6 @@ namespace HeloEmail.Sdk.Broadcasts
         Accepted,
         Processing,
         Completed,
-        Cancelled,
+        Canceled,
     }
 }

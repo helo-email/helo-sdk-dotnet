@@ -5,6 +5,7 @@ using HeloEmail.Sdk.Channels;
 using HeloEmail.Sdk.Domains;
 using HeloEmail.Sdk.Sending;
 using HeloEmail.Sdk.Statistics;
+using HeloEmail.Sdk.Suppressions;
 using HeloEmail.Sdk.WebhookEndpoints;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -27,6 +28,7 @@ namespace HeloEmail.Sdk
             services.AddTransient<IDomainsClient, DomainsClient>();
             services.AddTransient<ISendingClient, SendingClient>();
             services.AddTransient<IStatisticsClient, StatisticsClient>();
+            services.AddTransient<ISuppressionsClient, SuppressionsClient>();
             services.AddTransient<IWebhookEndpointsClient, WebhookEndpointsClient>();
             services.AddTransient<IHeloApiClient, HeloApiClient>();
         }

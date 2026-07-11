@@ -17,7 +17,7 @@ namespace HeloEmail.Sdk.WebhookEndpoints
         }
 
         public Task<WebhookEndpointResponse> Create(CreateWebhookEndpointRequest request) =>
-            Post<CreateWebhookEndpointRequest, WebhookEndpointResponse>("/webhook-endpoints", request);
+            Post<CreateWebhookEndpointRequest, WebhookEndpointResponse>("/webhooks", request);
 
         public Task<PaginationResultOfWebhookEndpointResponse> List(int? limit = null, int? offset = null,
             IEnumerable<string> channelIds = null)
@@ -29,21 +29,21 @@ namespace HeloEmail.Sdk.WebhookEndpoints
             };
             if (channelIds != null)
                 query.AddRange(channelIds.Select(id => ("channelIds", id)));
-            return Get<PaginationResultOfWebhookEndpointResponse>(BuildUrl("/webhook-endpoints", query));
+            return Get<PaginationResultOfWebhookEndpointResponse>(BuildUrl("/webhooks", query));
         }
 
         public Task<WebhookEndpointResponse> Retrieve(string id) =>
-            Get<WebhookEndpointResponse>($"/webhook-endpoints/{Uri.EscapeDataString(id)}");
+            Get<WebhookEndpointResponse>($"/webhooks/{Uri.EscapeDataString(id)}");
 
         public Task<WebhookEndpointResponse> Update(string id, UpdateWebhookEndpointRequest request) =>
             Patch<UpdateWebhookEndpointRequest, WebhookEndpointResponse>(
-                $"/webhook-endpoints/{Uri.EscapeDataString(id)}", request);
+                $"/webhooks/{Uri.EscapeDataString(id)}", request);
 
         public new Task Delete(string id) =>
-            base.Delete($"/webhook-endpoints/{Uri.EscapeDataString(id)}");
+            base.Delete($"/webhooks/{Uri.EscapeDataString(id)}");
 
         public Task<WebhookEndpointResponse> RegenerateSigningKey(string id) =>
-            Post<WebhookEndpointResponse>($"/webhook-endpoints/{Uri.EscapeDataString(id)}/regenerate-signing-key");
+            Post<WebhookEndpointResponse>($"/webhooks/{Uri.EscapeDataString(id)}/regenerate-signing-key");
 
     }
 }
