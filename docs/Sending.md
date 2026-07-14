@@ -18,11 +18,11 @@ using HeloEmail.Sdk.Sending;
 
 var response = await helo.Sending.Transactional(new SendMessageRequest
 {
-    From = new MailAddress { Email = "sender@example.com", Name = "Sender" },
-    To = [new MailAddress { Email = "recipient@example.com", Name = "Recipient" }],
+    From = new MailAddress { Email = "from@yourdomain.com", Name = "Sender" },
+    To = [new MailAddress { Email = "to@example.com" }],
     Subject = "Hello from Helo",
-    Html = "<p>Hello!</p>",
-    Text = "Hello!",
+    Html = "<html><body><h1>Hi there, new friend.</h1><p>This is a test message, delivered with <3 by Helo. </p></body></html>",
+    Text = "This is a test message, delivered with <3 by Helo.",
     Tags = ["welcome", "onboarding"],
 }, channelId: "your-channel-id");
 ```
@@ -43,17 +43,17 @@ var response = await helo.Sending.TransactionalBatch(new SendMessageBatchRequest
     [
         new SendMessageRequest
         {
-            From = new MailAddress { Email = "sender@example.com", Name = "Sender" },
+            From = new MailAddress { Email = "from@yourdomain.com", Name = "From name" },
             To = [new MailAddress { Email = "first@example.com" }],
             Subject = "Hello from Helo",
-            Html = "<p>Hello!</p>",
+            Html = "<html><body><h1>Hi there, new friend.</h1><p>This is a test message, delivered with <3 by Helo. </p></body></html>",
         },
         new SendMessageRequest
         {
-            From = new MailAddress { Email = "sender@example.com", Name = "Sender" },
+            From = new MailAddress { Email = "from@yourdomain.com", Name = "From name" },
             To = [new MailAddress { Email = "second@example.com" }],
             Subject = "Hello from Helo",
-            Html = "<p>Hello!</p>",
+            Html = "<html><body><h1>Hi there, new friend.</h1><p>This is a test message, delivered with <3 by Helo. </p></body></html>",
         },
     ],
 }, channelId: "your-channel-id");
@@ -71,7 +71,7 @@ using HeloEmail.Sdk.Sending;
 
 var response = await helo.Sending.Broadcast(new SendBroadcastRequest
 {
-    From = new MailAddress { Email = "sender@example.com", Name = "Sender" },
+    From = new MailAddress { Email = "from@yourdomain.com", Name = "From name" },
     Template = new MessageTemplate
     {
         Subject = "Product update",
@@ -97,9 +97,9 @@ using HeloEmail.Sdk.Sending;
 
 var response = await helo.Sending.BroadcastMessage(new SendMessageRequest
 {
-    From = new MailAddress { Email = "sender@example.com", Name = "Sender" },
-    To = [new MailAddress { Email = "recipient@example.com" }],
+    From = new MailAddress { Email = "from@yourdomain.com", Name = "From name" },
+    To = [new MailAddress { Email = "to@example.com" }],
     Subject = "Hello from Helo",
-    Html = "<p>Hello!</p>",
+    Html = "<html><body><h1>Hi there, new friend.</h1><p>This is a test message, delivered with <3 by Helo. </p></body></html>",
 }, channelId: "your-channel-id");
 ```
