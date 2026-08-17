@@ -15,9 +15,9 @@ fi
 
 version=$1
 source="https://nuget.pkg.github.com/helo-email/index.json"
-package="bin/Release/Helo.ApiClient.$version.nupkg"
+package="bin/Release/HeloEmail.Sdk.$version.nupkg"
 
-cd src/Helo.ApiClient
+cd src/HeloEmail.Sdk
 
 dotnet pack --configuration Release -p:PackageVersion=$version
 
