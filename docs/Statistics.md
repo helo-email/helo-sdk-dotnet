@@ -5,7 +5,7 @@ Retrieve delivery statistics. The examples assume an `IHeloApiClient helo` — s
 
 ## Hourly statistics
 
-`GET /activity/statistics/hourly`
+`GET /statistics/hourly`
 
 ```csharp Statistics_retrieveHourly
 using System;
@@ -17,7 +17,7 @@ var stats = await helo.Statistics.RetrieveHourly(
 
 ## Daily statistics
 
-`GET /activity/statistics/daily`
+`GET /statistics/daily`
 
 ```csharp Statistics_retrieveDaily
 using System;
@@ -30,7 +30,7 @@ var stats = await helo.Statistics.RetrieveDaily(
 
 ## Total statistics
 
-`GET /activity/statistics/totals`
+`GET /statistics/totals`
 
 ```csharp Statistics_retrieveTotals
 using System;

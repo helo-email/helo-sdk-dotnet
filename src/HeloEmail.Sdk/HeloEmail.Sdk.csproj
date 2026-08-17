@@ -7,7 +7,7 @@
         <Description>Helo is an email API for developers and platforms.</Description>
         <PackageId>HeloEmail.Sdk</PackageId>
         <Authors>Helo Email</Authors>
-        <Version>1.0.0-beta.3</Version>
+        <Version>1.0.0-beta.4</Version>
         <Company>HELO EHLO LLC</Company>
         <Product>Helo</Product>
         <PackageTags>Helo;Email;SDK;EmailAPI</PackageTags>

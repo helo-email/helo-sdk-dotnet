@@ -20,14 +20,14 @@ namespace HeloEmail.Sdk.Statistics
         public Task<StatisticsHourlyResponse> RetrieveHourly(DateTimeOffset from, DateTimeOffset to,
             string channelId = null, IEnumerable<string> tags = null)
         {
-            var url = BuildUrl("/activity/statistics/hourly", from, to, channelId: channelId, tags: tags);
+            var url = BuildUrl("/statistics/hourly", from, to, channelId: channelId, tags: tags);
             return Get<StatisticsHourlyResponse>(url);
         }
 
         public Task<StatisticsDailyResponse> RetrieveDaily(DateTimeOffset from, DateTimeOffset to, string timezone,
             string channelId = null, IEnumerable<string> tags = null)
         {
-            var url = BuildUrl("/activity/statistics/daily", from, to, timezone: timezone, channelId: channelId,
+            var url = BuildUrl("/statistics/daily", from, to, timezone: timezone, channelId: channelId,
                 tags: tags, dateOnly: true);
             return Get<StatisticsDailyResponse>(url);
         }
@@ -35,7 +35,7 @@ namespace HeloEmail.Sdk.Statistics
         public Task<StatisticsTotalsResponse> RetrieveTotals(DateTimeOffset from, DateTimeOffset to,
             string channelId = null, IEnumerable<string> tags = null)
         {
-            var url = BuildUrl("/activity/statistics/totals", from, to, channelId: channelId, tags: tags);
+            var url = BuildUrl("/statistics/totals", from, to, channelId: channelId, tags: tags);
             return Get<StatisticsTotalsResponse>(url);
         }
 
