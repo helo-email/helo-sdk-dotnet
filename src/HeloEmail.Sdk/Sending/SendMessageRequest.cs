@@ -16,7 +16,7 @@ namespace HeloEmail.Sdk.Sending
         public SendTracking Tracking { get; set; }
         public List<Attachment> Attachments { get; set; }
         public List<string> Tags { get; set; }
-        public object Headers { get; set; }
-        public object Metadata { get; set; }
+        public Dictionary<string, string> Headers { get; set; }
+        public Dictionary<string, string> Metadata { get; set; }
     }
 }

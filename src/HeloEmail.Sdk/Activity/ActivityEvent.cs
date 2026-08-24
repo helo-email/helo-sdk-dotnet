@@ -14,7 +14,7 @@ namespace HeloEmail.Sdk.Activity
         public string Subject { get; set; }
         public List<string> Recipients { get; set; }
         public List<string> Tags { get; set; }
-        public object Metadata { get; set; }
+        public Dictionary<string, string> Metadata { get; set; }
         public object Details { get; set; }
     }
 }
