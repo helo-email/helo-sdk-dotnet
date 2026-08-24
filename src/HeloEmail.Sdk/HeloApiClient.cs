@@ -5,7 +5,7 @@ using HeloEmail.Sdk.Domains;
 using HeloEmail.Sdk.Sending;
 using HeloEmail.Sdk.Statistics;
 using HeloEmail.Sdk.Suppressions;
-using HeloEmail.Sdk.WebhookEndpoints;
+using HeloEmail.Sdk.Webhooks;
 
 namespace HeloEmail.Sdk
 {
@@ -19,7 +19,7 @@ namespace HeloEmail.Sdk
             ISendingClient sending,
             IStatisticsClient statistics,
             ISuppressionsClient suppressions,
-            IWebhookEndpointsClient webhookEndpoints)
+            IWebhooksClient webhooks)
         {
             Activity = activity;
             Broadcasts = broadcasts;
@@ -28,7 +28,7 @@ namespace HeloEmail.Sdk
             Sending = sending;
             Statistics = statistics;
             Suppressions = suppressions;
-            WebhookEndpoints = webhookEndpoints;
+            Webhooks = webhooks;
         }
 
         public IActivityClient Activity { get; }
@@ -38,6 +38,6 @@ namespace HeloEmail.Sdk
         public ISendingClient Sending { get; }
         public IStatisticsClient Statistics { get; }
         public ISuppressionsClient Suppressions { get; }
-        public IWebhookEndpointsClient WebhookEndpoints { get; }
+        public IWebhooksClient Webhooks { get; }
     }
 }

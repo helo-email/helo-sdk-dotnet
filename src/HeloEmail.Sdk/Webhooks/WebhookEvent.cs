@@ -1,4 +1,4 @@
-namespace HeloEmail.Sdk.WebhookEndpoints
+namespace HeloEmail.Sdk.Webhooks
 {
     public enum WebhookEvent
     {
@@ -11,5 +11,9 @@ namespace HeloEmail.Sdk.WebhookEndpoints
         Complained,
         Unsubscribed,
         Resubscribed,
+        DomainKeyVerified,
+        DomainKeyVerificationFailed,
+        ReturnPathDomainVerified,
+        ReturnPathDomainVerificationFailed,
     }
 }

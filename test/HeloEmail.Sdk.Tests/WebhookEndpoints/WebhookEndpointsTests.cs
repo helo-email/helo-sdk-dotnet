@@ -1,13 +1,13 @@
 using HeloEmail.Sdk.Errors;
-using HeloEmail.Sdk.WebhookEndpoints;
+using HeloEmail.Sdk.Webhooks;
 using Meziantou.Extensions.Logging.Xunit.v3;
 
 namespace HeloEmail.Sdk.Tests.WebhookEndpoints;
 
 public class WebhookEndpointsTests(ITestOutputHelper outputHelper) : BaseFixture
 {
-    private static WebhookEndpointsClient CreateClient() =>
-        new(HttpClient, XUnitLogger.CreateLogger<WebhookEndpointsClient>());
+    private static WebhooksClient CreateClient() =>
+        new(HttpClient, XUnitLogger.CreateLogger<WebhooksClient>());
 
     [Fact]
     public async Task List_DoesNotThrow()
@@ -28,10 +28,10 @@ public class WebhookEndpointsTests(ITestOutputHelper outputHelper) : BaseFixture
     public async Task CreateRetrieveUpdateDelete_DoesNotThrow()
     {
         var client = CreateClient();
-        WebhookEndpointResponse? created = null;
+        WebhookResponse? created = null;
         try
         {
-            created = await client.Create(new CreateWebhookEndpointRequest
+            created = await client.Create(new CreateWebhookRequest
             {
                 Url = "https://example.com/webhook",
                 Events = [WebhookEvent.Delivered, WebhookEvent.Bounced],
@@ -43,7 +43,7 @@ public class WebhookEndpointsTests(ITestOutputHelper outputHelper) : BaseFixture
             var retrieved = await client.Retrieve(created.Id);
             Assert.Equal(created.Id, retrieved.Id);
 
-            var updated = await client.Update(created.Id, new UpdateWebhookEndpointRequest
+            var updated = await client.Update(created.Id, new UpdateWebhookRequest
             {
                 Enabled = false,
             });

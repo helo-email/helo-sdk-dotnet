@@ -1,4 +1,4 @@
-namespace HeloEmail.Sdk.WebhookEndpoints
+namespace HeloEmail.Sdk.Webhooks
 {
     public class WebhookHeader
     {
