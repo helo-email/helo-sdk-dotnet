@@ -6,5 +6,10 @@ namespace HeloEmail.Sdk.Webhooks.Payloads
     public class ComplainedWebhookPayload : RecipientWebhookPayload
     {
         public override WebhookEvent EventType => WebhookEvent.Complained;
+
+        /// <summary>
+        /// Details specific to the `complained` event.
+        /// </summary>
+        public ComplainedDetails Details { get; set; }
     }
 }

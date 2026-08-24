@@ -6,5 +6,10 @@ namespace HeloEmail.Sdk.Webhooks.Payloads
     public class UnsubscribedWebhookPayload : RecipientWebhookPayload
     {
         public override WebhookEvent EventType => WebhookEvent.Unsubscribed;
+
+        /// <summary>
+        /// Details specific to the `unsubscribed` event.
+        /// </summary>
+        public UnsubscribedDetails Details { get; set; }
     }
 }

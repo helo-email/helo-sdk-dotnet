@@ -6,5 +6,10 @@ namespace HeloEmail.Sdk.Webhooks.Payloads
     public class DeliveredWebhookPayload : RecipientWebhookPayload
     {
         public override WebhookEvent EventType => WebhookEvent.Delivered;
+
+        /// <summary>
+        /// Details specific to the `delivered` event.
+        /// </summary>
+        public DeliveredDetails Details { get; set; }
     }
 }
