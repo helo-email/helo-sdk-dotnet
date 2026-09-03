@@ -1,21 +1,24 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
+        <RootNamespace>HeloEmail.Sdk</RootNamespace>
         <RepositoryUrl>https://github.com/helo-email/helo-sdk-dotnet</RepositoryUrl>
-        <PackageProjectUrl>https://helohq.com</PackageProjectUrl>
-        <Description>Helo is an email API for developers and platforms.</Description>
+        <PackageProjectUrl>https://api.helohq.com</PackageProjectUrl>
+        <Description>Helo API</Description>
         <PackageId>HeloEmail.Sdk</PackageId>
         <Authors>Helo Email</Authors>
-        <Version>1.0.0-beta.6</Version>
         <Company>HELO EHLO LLC</Company>
         <Product>Helo</Product>
-        <PackageTags>Helo;Email;SDK;EmailAPI</PackageTags>
+        <Copyright>Copyright (c) HELO EHLO LLC 2026.</Copyright>
+        <Version>1.0.0-beta.7</Version>
+        <PackageTags>Helo;SDK;API</PackageTags>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageIcon>icon.jpg</PackageIcon>
-        <Copyright>Copyright (c) HELO EHLO LLC 2026.</Copyright>
         <IsPackable>true</IsPackable>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <NoWarn>$(NoWarn);CS1591</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
@@ -23,14 +26,10 @@
         <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.5"/>
         <PackageReference Include="System.Text.Json" Version="10.0.5"/>
     </ItemGroup>
-    
+
     <ItemGroup>
         <None Include="../../README.md" Pack="true" PackagePath="\"/>
         <None Include="../../icon.jpg" Pack="true" PackagePath="\"/>
-    </ItemGroup>
-    
-    <ItemGroup>
-      <Folder Include="Webhooks\Payloads\" />
     </ItemGroup>
 
 </Project>

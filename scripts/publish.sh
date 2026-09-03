@@ -4,20 +4,20 @@ set -eo pipefail
 if [ -z "$1" ]
 then
   echo "Package version must be specified"
-  exit
+  exit 1
 fi
 
 if [ -z "$helo_pkg_token" ]
 then
   echo "Github access token must be set in environment variable 'helo_pkg_token'"
-  exit
+  exit 1
 fi
 
 version=$1
 source="https://nuget.pkg.github.com/helo-email/index.json"
 package="bin/Release/HeloEmail.Sdk.$version.nupkg"
 
-cd src/HeloEmail.Sdk
+cd "$(dirname "$0")/../src/HeloEmail.Sdk"
 
 dotnet pack --configuration Release -p:PackageVersion=$version
 

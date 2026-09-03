@@ -1,66 +1,99 @@
 # Webhooks
 
-Manage webhook endpoints. In the .NET SDK these live under `helo.WebhookEndpoints`.
-The examples assume an `IHeloApiClient helo` — see the [README](../README.md) for how
-to register and inject it.
+Create and manage webhooks for event notifications.
 
-## Create a webhook endpoint
+The examples below assume you have an `IHeloApiClient helo` — see the
+[README](../README.md) for how to register and inject it.
+
+| Method | HTTP request | Description |
+| ------ | ------------ | ----------- |
+| [**List**](#list) | **GET** /webhooks | List all webhooks |
+| [**Create**](#create) | **POST** /webhooks | Create a webhook |
+| [**Retrieve**](#retrieve) | **GET** /webhooks/{id} | Retrieve a webhook |
+| [**Update**](#update) | **PATCH** /webhooks/{id} | Update a webhook |
+| [**Delete**](#delete) | **DELETE** /webhooks/{id} | Delete a webhook |
+| [**RegenerateSigningKey**](#regeneratesigningkey) | **POST** /webhooks/{id}/regenerate-signing-key | Regenerate webhook signing key |
+
+## List
+
+`GET /webhooks`
+
+Retrieves all webhooks configured for the account.
+
+```csharp Webhooks_list
+using HeloEmail.Sdk.Webhooks;
+
+var paginationResultOfWebhook = await helo.Webhooks.List(limit: 10, offset: 10);
+```
+
+## Create
 
 `POST /webhooks`
 
-```csharp Webhooks_create
-using HeloEmail.Sdk.WebhookEndpoints;
+Registers a new webhook to receive event notifications.
 
-var webhook = await helo.WebhookEndpoints.Create(new CreateWebhookEndpointRequest
+```csharp Webhooks_create
+using HeloEmail.Sdk.Webhooks;
+
+var webhook = await helo.Webhooks.Create(new CreateWebhookRequest
 {
-    Url = "https://example.com/webhooks/helo",
-    Events = [WebhookEvent.Delivered, WebhookEvent.Bounced],
-    ChannelId = "channel-id",
+    Url = "test-url",
+    Events = [WebhookEvent.Accepted],
+    ChannelId = "550e8400-e29b-41d4-a716-446655440000",
     Enabled = true,
 });
 ```
 
-## List webhook endpoints
-
-`GET /webhooks`
-
-```csharp Webhooks_list
-var webhooks = await helo.WebhookEndpoints.List(limit: 20);
-```
-
-## Retrieve a webhook endpoint
+## Retrieve
 
 `GET /webhooks/{id}`
 
+Fetches the details and configuration of a specific webhook.
+
 ```csharp Webhooks_retrieve
-var webhook = await helo.WebhookEndpoints.Retrieve("webhook-id");
+using HeloEmail.Sdk.Webhooks;
+
+var webhook = await helo.Webhooks.Retrieve("550e8400-e29b-41d4-a716-446655440000");
 ```
 
-## Update a webhook endpoint
+## Update
 
 `PATCH /webhooks/{id}`
 
-```csharp Webhooks_update
-using HeloEmail.Sdk.WebhookEndpoints;
+Modifies an existing webhook by ID.
 
-var webhook = await helo.WebhookEndpoints.Update("webhook-id", new UpdateWebhookEndpointRequest
+```csharp Webhooks_update
+using HeloEmail.Sdk.Webhooks;
+
+var webhook = await helo.Webhooks.Update("550e8400-e29b-41d4-a716-446655440000", new UpdateWebhookRequest
 {
-    Enabled = false,
+    Url = "test-url",
+    Events = [WebhookEvent.Accepted],
+    ChannelId = "550e8400-e29b-41d4-a716-446655440000",
+    Enabled = true,
 });
 ```
 
-## Delete a webhook endpoint
+## Delete
 
 `DELETE /webhooks/{id}`
 
+Permanently removes a webhook.
+
 ```csharp Webhooks_delete
-await helo.WebhookEndpoints.Delete("webhook-id");
+using HeloEmail.Sdk.Webhooks;
+
+await helo.Webhooks.Delete("550e8400-e29b-41d4-a716-446655440000");
 ```
 
-## Regenerate a webhook signing key
+## RegenerateSigningKey
 
 `POST /webhooks/{id}/regenerate-signing-key`
 
+Regenerate the signing key used for the webhook signature. This operation replaces the old key.
+
 ```csharp Webhooks_regenerateSigningKey
-var webhook = await helo.WebhookEndpoints.RegenerateSigningKey("webhook-id");
+using HeloEmail.Sdk.Webhooks;
+
+var webhook = await helo.Webhooks.RegenerateSigningKey("550e8400-e29b-41d4-a716-446655440000");
 ```

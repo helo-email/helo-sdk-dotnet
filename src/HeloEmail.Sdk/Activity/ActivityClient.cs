@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -16,6 +17,9 @@ namespace HeloEmail.Sdk.Activity
         {
         }
 
+        /// <summary>
+        /// List activity events
+        /// </summary>
         public Task<PaginatedEventsResponse> ListEvents(
             string channelId = null,
             string messageId = null,
@@ -33,30 +37,27 @@ namespace HeloEmail.Sdk.Activity
             {
                 ("channelId", channelId),
                 ("messageId", messageId),
-                ("after", after?.ToString()),
+                ("after", after?.ToString(CultureInfo.InvariantCulture)),
                 ("startDate", startDate?.ToString("O")),
                 ("endDate", endDate?.ToString("O")),
-                ("limit", limit?.ToString()),
+                ("limit", limit?.ToString(CultureInfo.InvariantCulture)),
                 ("recipient", recipient),
                 ("subject", subject),
-                ("mailType", mailType?.ToString().ToLower()),
+                ("mailType", ToQueryValue(mailType)),
             };
 
             if (tags != null)
-            {
-                query.AddRange(tags.Select(tag => ("tags", tag)));
-            }
+                query.AddRange(tags.Select(x => ("tags", x)));
 
-            if (eventTypes == null)
-            {
-                return Get<PaginatedEventsResponse>(BuildUrl("/activity/events", query));
-            }
-
-            query.AddRange(eventTypes.Select(et => ("eventTypes", et.ToString().ToLower())));
+            if (eventTypes != null)
+                query.AddRange(eventTypes.Select(x => ("eventTypes", ToQueryValue(x))));
 
             return Get<PaginatedEventsResponse>(BuildUrl("/activity/events", query));
         }
 
+        /// <summary>
+        /// List messages
+        /// </summary>
         public Task<PaginatedMessagesResponse> ListMessages(
             string channelId = null,
             long? after = null,
@@ -67,33 +68,31 @@ namespace HeloEmail.Sdk.Activity
             string subject = null,
             IEnumerable<string> tags = null,
             MailType? mailType = null,
-            MessageStatus? status = null)
+            Status? status = null)
         {
             var query = new List<(string, string)>
             {
                 ("channelId", channelId),
-                ("after", after?.ToString()),
+                ("after", after?.ToString(CultureInfo.InvariantCulture)),
                 ("startDate", startDate?.ToString("O")),
                 ("endDate", endDate?.ToString("O")),
-                ("limit", limit?.ToString()),
+                ("limit", limit?.ToString(CultureInfo.InvariantCulture)),
                 ("recipient", recipient),
                 ("subject", subject),
-                ("mailType", mailType?.ToString().ToLower()),
-                ("status", status?.ToString().ToLower()),
+                ("mailType", ToQueryValue(mailType)),
+                ("status", ToQueryValue(status)),
             };
 
-            if (tags == null)
-            {
-                return Get<PaginatedMessagesResponse>(BuildUrl("/activity/messages", query));
-            }
-
-            query.AddRange(tags.Select(tag => ("tags", tag)));
+            if (tags != null)
+                query.AddRange(tags.Select(x => ("tags", x)));
 
             return Get<PaginatedMessagesResponse>(BuildUrl("/activity/messages", query));
         }
 
+        /// <summary>
+        /// Retrieve message details
+        /// </summary>
         public Task<MessageDetailsResponse> RetrieveMessage(string id) =>
             Get<MessageDetailsResponse>($"/activity/messages/{Uri.EscapeDataString(id)}");
-
     }
 }

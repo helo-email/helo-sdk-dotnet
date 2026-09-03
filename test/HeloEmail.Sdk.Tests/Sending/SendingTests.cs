@@ -1,157 +1,117 @@
-using HeloEmail.Sdk.Errors;
+using HeloEmail.Sdk;
 using HeloEmail.Sdk.Sending;
-using Meziantou.Extensions.Logging.Xunit.v3;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace HeloEmail.Sdk.Tests.Sending;
 
-public class SendingTests(ITestOutputHelper outputHelper) : BaseFixture
+public class SendingTests : BaseFixture
 {
-    private static readonly MailAddress TestAddress = new() { Email = "testing@helohq.com", Name = "Test" };
-
-    private static SendingClient CreateClient() =>
-        new(HttpClient, XUnitLogger.CreateLogger<SendingClient>());
-
-    [Fact]
-    public async Task SendTransactional_DoesNotThrow()
+    private static (SendingClient Client, StubHandler Handler) CreateClient()
     {
-        try
-        {
-            await CreateClient().Transactional(new SendMessageRequest
-            {
-                From = TestAddress,
-                To = [TestAddress],
-                Subject = "Test",
-                Html = "<h1>Test</h1>",
-            }, channelId: "241efbe3-3e50-4192-ab69-f8c9ccb10ae1");
-        }
-        catch (ApiErrorException ex)
-        {
-            outputHelper.WriteLine(ex.ResponseContent);
-            throw;
-        }
+        var (httpClient, handler) = CreateHttpClient();
+        return (new SendingClient(httpClient, NullLogger<SendingClient>.Instance), handler);
     }
 
     [Fact]
-    public async Task SendTransactional_WithOptionalFields_DoesNotThrow()
+    public async Task Transactional_SendsExpectedRequest()
     {
-        try
+        var (client, handler) = CreateClient();
+
+        var result = await client.Transactional(new SendMessageRequest
         {
-            await CreateClient().Transactional(new SendMessageRequest
-            {
-                From = TestAddress,
-                To = [TestAddress],
-                Cc = [TestAddress],
-                ReplyTo = [TestAddress],
-                Subject = "Test with optional fields",
-                Html = "<h1>Test</h1>",
-                Text = "Test",
-                Tags = ["tag1", "tag2"],
-            }, channelId: "241efbe3-3e50-4192-ab69-f8c9ccb10ae1");
-        }
-        catch (ApiErrorException ex)
-        {
-            outputHelper.WriteLine(ex.ResponseContent);
-            throw;
-        }
+            From = new MailAddress { Email = "from@yourdomain.com", Name = "From name" },
+            To = [new MailAddress { Email = "to@example.com", Name = "To name" }],
+            Subject = "Hello from Helo",
+            Html = "<html><body><h1>Hi there, new friend.</h1><p>This is a test message, delivered with <3 by Helo. </p></body></html>",
+            Text = "This is a test message, delivered with <3 by Helo.",
+            Tags = ["welcome", "onboarding"],
+        }, channelId: "550e8400-e29b-41d4-a716-446655440000", idempotencyKey: "test-idempotencyKey");
+
+        Assert.NotNull(result);
+        Assert.Equal("POST", handler.Request!.Method.Method);
+        Assert.Equal("/send/transactional", handler.Request!.RequestUri!.AbsolutePath);
+        Assert.True(handler.Request!.Headers.Contains("X-Helo-Channel-Id"));
+        Assert.True(handler.Request!.Headers.Contains("X-Helo-Idempotency-Key"));
     }
 
     [Fact]
-    public async Task SendTransactional_WithIdempotencyKey_DoesNotThrow()
+    public async Task TransactionalBatch_SendsExpectedRequest()
     {
-        try
-        {
-            await CreateClient().Transactional(new SendMessageRequest
-            {
-                From = TestAddress,
-                To = [TestAddress],
-                Subject = "Test with idempotency key",
-                Html = "<h1>Test</h1>",
-            }, idempotencyKey: Guid.NewGuid().ToString(), channelId: "241efbe3-3e50-4192-ab69-f8c9ccb10ae1");
-        }
-        catch (ApiErrorException ex)
-        {
-            outputHelper.WriteLine(ex.ResponseContent);
-            throw;
-        }
-    }
+        var (client, handler) = CreateClient();
 
-    [Fact]
-    public async Task SendTransactionalBatch_DoesNotThrow()
-    {
-        try
+        var result = await client.TransactionalBatch(new SendMessageBatchRequest
         {
-            await CreateClient().TransactionalBatch(new SendMessageBatchRequest
-            {
-                Requests =
-                [
-                    new SendMessageRequest
-                    {
-                        From = TestAddress,
-                        To = [TestAddress],
-                        Subject = "Batch message 1",
-                        Html = "<h1>Batch 1</h1>",
-                    },
-                    new SendMessageRequest
-                    {
-                        From = TestAddress,
-                        To = [TestAddress],
-                        Subject = "Batch message 2",
-                        Html = "<h1>Batch 2</h1>",
-                    },
-                ],
-            }, channelId: "241efbe3-3e50-4192-ab69-f8c9ccb10ae1");
-        }
-        catch (ApiErrorException ex)
-        {
-            outputHelper.WriteLine(ex.ResponseContent);
-            throw;
-        }
-    }
-
-    [Fact]
-    public async Task SendBroadcast_DoesNotThrow()
-    {
-        try
-        {
-            await CreateClient().Broadcast(new SendBroadcastRequest
-            {
-                From = TestAddress,
-                Messages =
-                [
-                    new BroadcastMessage { To = [TestAddress] },
-                ],
-                Template = new MessageTemplate
+            Requests = [
+                new SendMessageRequest
                 {
-                    Subject = "Broadcast test",
-                    Html = "<p>Hello {{name}}! Welcome to the {{plan}} plan!</p>",
-                    Data = new { name = "Alice", plan = "Pro" },
+                    From = new MailAddress { Email = "test@example.com", Name = "test-name" },
+                    To = [new MailAddress { Email = "test@example.com", Name = "test-name" }],
+                    Subject = "test-subject",
+                    Html = "test-html",
+                    Text = "test-text",
+                    Tags = ["test-tag"],
                 },
-            }, channelId: "241efbe3-3e50-4192-ab69-f8c9ccb10ae1");
-        }
-        catch (ApiErrorException ex)
-        {
-            outputHelper.WriteLine(ex.ResponseContent);
-            throw;
-        }
+            ],
+        }, channelId: "550e8400-e29b-41d4-a716-446655440000", idempotencyKey: "test-idempotencyKey");
+
+        Assert.NotNull(result);
+        Assert.Equal("POST", handler.Request!.Method.Method);
+        Assert.Equal("/send/transactional/batch", handler.Request!.RequestUri!.AbsolutePath);
+        Assert.True(handler.Request!.Headers.Contains("X-Helo-Channel-Id"));
+        Assert.True(handler.Request!.Headers.Contains("X-Helo-Idempotency-Key"));
     }
 
     [Fact]
-    public async Task SendBroadcastMessage_DoesNotThrow()
+    public async Task Broadcast_SendsExpectedRequest()
     {
-        try
+        var (client, handler) = CreateClient();
+
+        var result = await client.Broadcast(new SendBroadcastRequest
         {
-            await CreateClient().BroadcastMessage(new SendMessageRequest
+            From = new MailAddress { Email = "test@example.com", Name = "test-name" },
+            Template = new SendBroadcastRequestTemplate
             {
-                From = TestAddress,
-                To = [TestAddress],
-                Subject = "Broadcast message test",
-                Html = "<h1>Broadcast message</h1>",
-            }, channelId: "241efbe3-3e50-4192-ab69-f8c9ccb10ae1");
-        }
-        catch (ApiErrorException ex)
+                Subject = "test-subject",
+                Html = "test-html",
+                Text = "test-text",
+                InlineStyles = true,
+            },
+            Tags = ["test-tag"],
+            Messages = [
+                new SendBroadcastRequestMessage
+                {
+                    To = [new MailAddress { Email = "test@example.com", Name = "test-name" }],
+                    Tags = ["test-tag"],
+                },
+            ],
+        }, channelId: "550e8400-e29b-41d4-a716-446655440000", idempotencyKey: "test-idempotencyKey");
+
+        Assert.NotNull(result);
+        Assert.Equal("POST", handler.Request!.Method.Method);
+        Assert.Equal("/send/broadcast", handler.Request!.RequestUri!.AbsolutePath);
+        Assert.True(handler.Request!.Headers.Contains("X-Helo-Channel-Id"));
+        Assert.True(handler.Request!.Headers.Contains("X-Helo-Idempotency-Key"));
+    }
+
+    [Fact]
+    public async Task BroadcastMessage_SendsExpectedRequest()
+    {
+        var (client, handler) = CreateClient();
+
+        var result = await client.BroadcastMessage(new SendMessageRequest
         {
-            outputHelper.WriteLine(ex.ResponseContent);
-            throw;
-        }
+            From = new MailAddress { Email = "from@yourdomain.com", Name = "From name" },
+            To = [new MailAddress { Email = "to@example.com", Name = "To name" }],
+            Subject = "Hello from Helo",
+            Html = "<html><body><h1>Hi there, new friend.</h1><p>This is a test message, delivered with <3 by Helo. </p></body></html>",
+            Text = "This is a test message, delivered with <3 by Helo.",
+            Tags = ["welcome", "onboarding"],
+        }, channelId: "550e8400-e29b-41d4-a716-446655440000", idempotencyKey: "test-idempotencyKey");
+
+        Assert.NotNull(result);
+        Assert.Equal("POST", handler.Request!.Method.Method);
+        Assert.Equal("/send/broadcast/message", handler.Request!.RequestUri!.AbsolutePath);
+        Assert.True(handler.Request!.Headers.Contains("X-Helo-Channel-Id"));
+        Assert.True(handler.Request!.Headers.Contains("X-Helo-Idempotency-Key"));
     }
 }

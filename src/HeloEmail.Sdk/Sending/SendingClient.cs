@@ -14,43 +14,72 @@ namespace HeloEmail.Sdk.Sending
         {
         }
 
-        public Task<SendMessageAcceptedResponse> Transactional(SendMessageRequest request,
-            string channelId = null, string idempotencyKey = null) =>
-            Post<SendMessageRequest, SendMessageAcceptedResponse>(
-                "/send/transactional", request, BuildHeaders(channelId, idempotencyKey));
-
-        public Task<SendMessageBatchResponse> TransactionalBatch(SendMessageBatchRequest request,
-            string channelId = null, string idempotencyKey = null) =>
-            Post<SendMessageBatchRequest, SendMessageBatchResponse>(
-                "/send/transactional/batch", request, BuildHeaders(channelId, idempotencyKey));
-
-        public Task<SendBroadcastResponse> Broadcast(SendBroadcastRequest request,
-            string channelId = null, string idempotencyKey = null) =>
-            Post<SendBroadcastRequest, SendBroadcastResponse>(
-                "/send/broadcast", request, BuildHeaders(channelId, idempotencyKey));
-
-        public Task<SendMessageAcceptedResponse> BroadcastMessage(SendMessageRequest request,
-            string channelId = null, string idempotencyKey = null) =>
-            Post<SendMessageRequest, SendMessageAcceptedResponse>(
-                "/send/broadcast/message", request, BuildHeaders(channelId, idempotencyKey));
-
-        private static Dictionary<string, string> BuildHeaders(string channelId, string idempotencyKey)
+        /// <summary>
+        /// Send a transactional email
+        /// </summary>
+        public Task<SendMessageAcceptedResponse> Transactional(
+            SendMessageRequest request,
+            string channelId = null,
+            string idempotencyKey = null)
         {
-            if (channelId == null && idempotencyKey == null)
-                return null;
-
             var headers = new Dictionary<string, string>();
             if (channelId != null)
-            {
                 headers["X-Helo-Channel-Id"] = channelId;
-            }
-
             if (idempotencyKey != null)
-            {
                 headers["X-Helo-Idempotency-Key"] = idempotencyKey;
-            }
 
-            return headers;
+            return Post<SendMessageRequest, SendMessageAcceptedResponse>("/send/transactional", request, headers);
+        }
+
+        /// <summary>
+        /// Send transactional emails in batch
+        /// </summary>
+        public Task<SendMessageBatchResponse> TransactionalBatch(
+            SendMessageBatchRequest request,
+            string channelId = null,
+            string idempotencyKey = null)
+        {
+            var headers = new Dictionary<string, string>();
+            if (channelId != null)
+                headers["X-Helo-Channel-Id"] = channelId;
+            if (idempotencyKey != null)
+                headers["X-Helo-Idempotency-Key"] = idempotencyKey;
+
+            return Post<SendMessageBatchRequest, SendMessageBatchResponse>("/send/transactional/batch", request, headers);
+        }
+
+        /// <summary>
+        /// Send a broadcast email
+        /// </summary>
+        public Task<SendBroadcastResponse> Broadcast(
+            SendBroadcastRequest request,
+            string channelId = null,
+            string idempotencyKey = null)
+        {
+            var headers = new Dictionary<string, string>();
+            if (channelId != null)
+                headers["X-Helo-Channel-Id"] = channelId;
+            if (idempotencyKey != null)
+                headers["X-Helo-Idempotency-Key"] = idempotencyKey;
+
+            return Post<SendBroadcastRequest, SendBroadcastResponse>("/send/broadcast", request, headers);
+        }
+
+        /// <summary>
+        /// Send a single broadcast email
+        /// </summary>
+        public Task<SendMessageAcceptedResponse> BroadcastMessage(
+            SendMessageRequest request,
+            string channelId = null,
+            string idempotencyKey = null)
+        {
+            var headers = new Dictionary<string, string>();
+            if (channelId != null)
+                headers["X-Helo-Channel-Id"] = channelId;
+            if (idempotencyKey != null)
+                headers["X-Helo-Idempotency-Key"] = idempotencyKey;
+
+            return Post<SendMessageRequest, SendMessageAcceptedResponse>("/send/broadcast/message", request, headers);
         }
     }
 }

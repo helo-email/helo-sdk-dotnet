@@ -11,8 +11,10 @@ namespace HeloEmail.Sdk.Activity
         public MailType MailType { get; set; }
         public MailSource MailSource { get; set; }
         public DeliveryType DeliveryType { get; set; }
-        public MessageStatus Status { get; set; }
+        public Status Status { get; set; }
         public string Subject { get; set; }
         public List<string> Recipients { get; set; }
+        public List<string> Tags { get; set; }
+        public MessageStatistics Statistics { get; set; }
     }
 }

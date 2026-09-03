@@ -1,105 +1,112 @@
 # Sending
 
-Send transactional and broadcast emails through the Helo API.
+Send transactional and broadcast emails.
 
 The examples below assume you have an `IHeloApiClient helo` — see the
 [README](../README.md) for how to register and inject it.
 
-## Send a transactional email
+| Method | HTTP request | Description |
+| ------ | ------------ | ----------- |
+| [**Transactional**](#transactional) | **POST** /send/transactional | Send a transactional email |
+| [**TransactionalBatch**](#transactionalbatch) | **POST** /send/transactional/batch | Send transactional emails in batch |
+| [**Broadcast**](#broadcast) | **POST** /send/broadcast | Send a broadcast email |
+| [**BroadcastMessage**](#broadcastmessage) | **POST** /send/broadcast/message | Send a single broadcast email |
+
+## Transactional
 
 `POST /send/transactional`
 
-Sends a single transactional email. `channelId` selects the sending channel and
-`idempotencyKey` (both optional) lets you safely retry a send without duplicating it.
+Sends a single transactional email such as receipts, confirmations, or notifications.
 
 ```csharp Sending_transactional
 using HeloEmail.Sdk;
 using HeloEmail.Sdk.Sending;
 
-var response = await helo.Sending.Transactional(new SendMessageRequest
+var sendMessageAccepted = await helo.Sending.Transactional(new SendMessageRequest
 {
-    From = new MailAddress { Email = "from@yourdomain.com", Name = "Sender" },
-    To = [new MailAddress { Email = "to@example.com" }],
+    From = new MailAddress { Email = "from@yourdomain.com", Name = "From name" },
+    To = [new MailAddress { Email = "to@example.com", Name = "To name" }],
     Subject = "Hello from Helo",
     Html = "<html><body><h1>Hi there, new friend.</h1><p>This is a test message, delivered with <3 by Helo. </p></body></html>",
     Text = "This is a test message, delivered with <3 by Helo.",
     Tags = ["welcome", "onboarding"],
-}, channelId: "your-channel-id");
+}, channelId: "550e8400-e29b-41d4-a716-446655440000", idempotencyKey: "test-idempotencyKey");
 ```
 
-## Send transactional emails in batch
+## TransactionalBatch
 
 `POST /send/transactional/batch`
 
-Sends up to several transactional emails in a single request.
+Sends multiple transactional emails in a single API request for better performance.
 
 ```csharp Sending_transactionalBatch
 using HeloEmail.Sdk;
 using HeloEmail.Sdk.Sending;
 
-var response = await helo.Sending.TransactionalBatch(new SendMessageBatchRequest
+var sendMessageBatch = await helo.Sending.TransactionalBatch(new SendMessageBatchRequest
 {
-    Requests =
-    [
+    Requests = [
         new SendMessageRequest
         {
-            From = new MailAddress { Email = "from@yourdomain.com", Name = "From name" },
-            To = [new MailAddress { Email = "first@example.com" }],
-            Subject = "Hello from Helo",
-            Html = "<html><body><h1>Hi there, new friend.</h1><p>This is a test message, delivered with <3 by Helo. </p></body></html>",
-        },
-        new SendMessageRequest
-        {
-            From = new MailAddress { Email = "from@yourdomain.com", Name = "From name" },
-            To = [new MailAddress { Email = "second@example.com" }],
-            Subject = "Hello from Helo",
-            Html = "<html><body><h1>Hi there, new friend.</h1><p>This is a test message, delivered with <3 by Helo. </p></body></html>",
+            From = new MailAddress { Email = "test@example.com", Name = "test-name" },
+            To = [new MailAddress { Email = "test@example.com", Name = "test-name" }],
+            Subject = "test-subject",
+            Html = "test-html",
+            Text = "test-text",
+            Tags = ["test-tag"],
         },
     ],
-}, channelId: "your-channel-id");
+}, channelId: "550e8400-e29b-41d4-a716-446655440000", idempotencyKey: "test-idempotencyKey");
 ```
 
-## Send a broadcast email
+## Broadcast
 
 `POST /send/broadcast`
 
-Sends a broadcast to multiple recipients using a shared template.
+Sends a broadcast email to multiple recipients for marketing or announcement purposes.
 
 ```csharp Sending_broadcast
 using HeloEmail.Sdk;
 using HeloEmail.Sdk.Sending;
 
-var response = await helo.Sending.Broadcast(new SendBroadcastRequest
+var sendBroadcast = await helo.Sending.Broadcast(new SendBroadcastRequest
 {
-    From = new MailAddress { Email = "from@yourdomain.com", Name = "From name" },
-    Template = new MessageTemplate
+    From = new MailAddress { Email = "test@example.com", Name = "test-name" },
+    Template = new SendBroadcastRequestTemplate
     {
-        Subject = "Product update",
-        Html = "<p>Here's what's new this month…</p>",
+        Subject = "test-subject",
+        Html = "test-html",
+        Text = "test-text",
+        InlineStyles = true,
     },
-    Messages =
-    [
-        new BroadcastMessage { To = [new MailAddress { Email = "first@example.com" }] },
-        new BroadcastMessage { To = [new MailAddress { Email = "second@example.com" }] },
+    Tags = ["test-tag"],
+    Messages = [
+        new SendBroadcastRequestMessage
+        {
+            To = [new MailAddress { Email = "test@example.com", Name = "test-name" }],
+            Tags = ["test-tag"],
+        },
     ],
-}, channelId: "your-channel-id");
+}, channelId: "550e8400-e29b-41d4-a716-446655440000", idempotencyKey: "test-idempotencyKey");
 ```
 
-## Send a single broadcast email
+## BroadcastMessage
 
 `POST /send/broadcast/message`
 
-Sends a single message as part of a broadcast.
+Sends a single broadcast email message.
 
 ```csharp Sending_broadcastMessage
 using HeloEmail.Sdk;
 using HeloEmail.Sdk.Sending;
 
-var response = await helo.Sending.BroadcastMessage(new SendMessageRequest
+var sendMessageAccepted = await helo.Sending.BroadcastMessage(new SendMessageRequest
 {
     From = new MailAddress { Email = "from@yourdomain.com", Name = "From name" },
-    To = [new MailAddress { Email = "to@example.com" }],
+    To = [new MailAddress { Email = "to@example.com", Name = "To name" }],
     Subject = "Hello from Helo",
     Html = "<html><body><h1>Hi there, new friend.</h1><p>This is a test message, delivered with <3 by Helo. </p></body></html>",
-}, channelId: "your-channel-id");
+    Text = "This is a test message, delivered with <3 by Helo.",
+    Tags = ["welcome", "onboarding"],
+}, channelId: "550e8400-e29b-41d4-a716-446655440000", idempotencyKey: "test-idempotencyKey");
 ```

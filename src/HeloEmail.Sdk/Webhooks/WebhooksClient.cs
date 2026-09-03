@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -16,34 +17,54 @@ namespace HeloEmail.Sdk.Webhooks
         {
         }
 
-        public Task<WebhookResponse> Create(CreateWebhookRequest request) =>
-            Post<CreateWebhookRequest, WebhookResponse>("/webhooks", request);
-
-        public Task<PaginationResultOfWebhookResponse> List(int? limit = null, int? offset = null,
+        /// <summary>
+        /// List all webhooks
+        /// </summary>
+        public Task<PaginationResultOfWebhookResponse> List(
+            int? limit = null,
+            int? offset = null,
             IEnumerable<string> channelIds = null)
         {
             var query = new List<(string, string)>
             {
-                ("limit", limit?.ToString()),
-                ("offset", offset?.ToString()),
+                ("limit", limit?.ToString(CultureInfo.InvariantCulture)),
+                ("offset", offset?.ToString(CultureInfo.InvariantCulture)),
             };
+
             if (channelIds != null)
-                query.AddRange(channelIds.Select(id => ("channelIds", id)));
+                query.AddRange(channelIds.Select(x => ("channelIds", x)));
+
             return Get<PaginationResultOfWebhookResponse>(BuildUrl("/webhooks", query));
         }
 
+        /// <summary>
+        /// Create a webhook
+        /// </summary>
+        public Task<WebhookResponse> Create(CreateWebhookRequest request) =>
+            Post<CreateWebhookRequest, WebhookResponse>("/webhooks", request);
+
+        /// <summary>
+        /// Retrieve a webhook
+        /// </summary>
         public Task<WebhookResponse> Retrieve(string id) =>
             Get<WebhookResponse>($"/webhooks/{Uri.EscapeDataString(id)}");
 
+        /// <summary>
+        /// Update a webhook
+        /// </summary>
         public Task<WebhookResponse> Update(string id, UpdateWebhookRequest request) =>
-            Patch<UpdateWebhookRequest, WebhookResponse>(
-                $"/webhooks/{Uri.EscapeDataString(id)}", request);
+            Patch<UpdateWebhookRequest, WebhookResponse>($"/webhooks/{Uri.EscapeDataString(id)}", request);
 
+        /// <summary>
+        /// Delete a webhook
+        /// </summary>
         public new Task Delete(string id) =>
             base.Delete($"/webhooks/{Uri.EscapeDataString(id)}");
 
+        /// <summary>
+        /// Regenerate webhook signing key
+        /// </summary>
         public Task<WebhookResponse> RegenerateSigningKey(string id) =>
             Post<WebhookResponse>($"/webhooks/{Uri.EscapeDataString(id)}/regenerate-signing-key");
-
     }
 }

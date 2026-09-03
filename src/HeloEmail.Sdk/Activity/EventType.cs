@@ -10,5 +10,6 @@ namespace HeloEmail.Sdk.Activity
         Clicked,
         Complained,
         Unsubscribed,
+        Resubscribed,
     }
 }

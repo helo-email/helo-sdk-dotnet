@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 
 namespace HeloEmail.Sdk.Broadcasts
 {
@@ -11,52 +10,18 @@ namespace HeloEmail.Sdk.Broadcasts
         public string Subject { get; set; }
         public string Completion { get; set; }
         public int Messages { get; set; }
+
+        /// <summary>
+        /// Number of messages that failed permanently. Retrieve details via `GET /broadcasts/{id}/failures`.
+        /// </summary>
         public int Failed { get; set; }
+
+        /// <summary>
+        /// Number of recipients skipped because they appear on a suppression list. Retrieve details via `GET /broadcasts/{id}/suppressions`.
+        /// </summary>
         public int Suppressed { get; set; }
         public BroadcastContent Content { get; set; }
         public BroadcastTracking Tracking { get; set; }
         public BroadcastStatistics Statistics { get; set; }
-    }
-
-    public class BroadcastContent
-    {
-        public MailAddress From { get; set; }
-        public List<MailAddress> ReplyTo { get; set; }
-        public BroadcastContentTemplate Template { get; set; }
-        public List<BroadcastContentAttachment> Attachments { get; set; }
-        public List<string> Tags { get; set; }
-        public Dictionary<string, string> Headers { get; set; }
-        public Dictionary<string, string> Metadata { get; set; }
-    }
-
-    public class BroadcastContentTemplate
-    {
-        public string Subject { get; set; }
-        public string Html { get; set; }
-        public string Text { get; set; }
-    }
-
-    public class BroadcastContentAttachment
-    {
-        public string FileName { get; set; }
-        public AttachmentDisposition Disposition { get; set; }
-        public int Size { get; set; }
-    }
-
-    public class BroadcastTracking
-    {
-        public bool Opens { get; set; }
-        public bool Links { get; set; }
-    }
-
-    public class BroadcastStatistics
-    {
-        public int Sent { get; set; }
-        public int Delivered { get; set; }
-        public int Bounced { get; set; }
-        public int Opened { get; set; }
-        public int Clicked { get; set; }
-        public int Complained { get; set; }
-        public int Unsubscribed { get; set; }
     }
 }

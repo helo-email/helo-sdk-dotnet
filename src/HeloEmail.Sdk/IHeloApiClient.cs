@@ -9,6 +9,9 @@ using HeloEmail.Sdk.Webhooks;
 
 namespace HeloEmail.Sdk
 {
+    /// <summary>
+    /// Entry point to the Helo API: one property per API domain.
+    /// </summary>
     public interface IHeloApiClient
     {
         IActivityClient Activity { get; }

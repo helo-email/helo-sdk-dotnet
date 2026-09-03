@@ -5,12 +5,12 @@ namespace HeloEmail.Sdk.Statistics
 {
     public class StatisticsHourlyResponse
     {
-        public List<HourlyStatisticsResult> Results { get; set; }
+        public List<StatisticsHourlyResponseResult> Results { get; set; }
     }
 
-    public class HourlyStatisticsResult
+    public class StatisticsHourlyResponseResult
     {
-        public DateTimeOffset Timestamp { get; set; }
+        public DateTimeOffset? Timestamp { get; set; }
         public DeliveryStats Transactional { get; set; }
         public DeliveryStats Broadcast { get; set; }
     }
