@@ -44,12 +44,12 @@ public class SendingTests : BaseFixture
             Requests = [
                 new SendMessageRequest
                 {
-                    From = new MailAddress { Email = "test@example.com", Name = "test-name" },
-                    To = [new MailAddress { Email = "test@example.com", Name = "test-name" }],
-                    Subject = "test-subject",
-                    Html = "test-html",
-                    Text = "test-text",
-                    Tags = ["test-tag"],
+                    From = new MailAddress { Email = "from@yourdomain.com", Name = "From name" },
+                    To = [new MailAddress { Email = "to@example.com", Name = "To name" }],
+                    Subject = "Hello from Helo",
+                    Html = "<html><body><h1>Hi there, new friend.</h1><p>This is a test message, delivered with <3 by Helo. </p></body></html>",
+                    Text = "This is a test message, delivered with <3 by Helo.",
+                    Tags = ["welcome", "onboarding"],
                 },
             ],
         }, channelId: "550e8400-e29b-41d4-a716-446655440000", idempotencyKey: "test-idempotencyKey");

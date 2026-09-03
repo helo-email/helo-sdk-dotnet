@@ -7,8 +7,8 @@ namespace HeloEmail.Sdk.Webhooks
     {
         Accepted,
         Processed,
-        Bounced,
         Delivered,
+        Bounced,
         Opened,
         Clicked,
         Complained,

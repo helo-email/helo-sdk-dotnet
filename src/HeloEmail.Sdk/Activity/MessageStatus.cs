@@ -1,6 +1,6 @@
 namespace HeloEmail.Sdk.Activity
 {
-    public enum Status
+    public enum MessageStatus
     {
         Queued,
         Sent,

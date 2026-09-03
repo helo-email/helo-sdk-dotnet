@@ -35,7 +35,7 @@ namespace HeloEmail.Sdk.Activity
             string subject = null,
             IEnumerable<string> tags = null,
             MailType? mailType = null,
-            Status? status = null);
+            MessageStatus? status = null);
 
         /// <summary>
         /// Retrieve message details
