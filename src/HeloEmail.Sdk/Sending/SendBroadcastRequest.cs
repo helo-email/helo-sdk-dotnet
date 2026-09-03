@@ -10,8 +10,8 @@ namespace HeloEmail.Sdk.Sending
         public SendTracking Tracking { get; set; }
         public List<Attachment> Attachments { get; set; }
         public List<string> Tags { get; set; }
-        public object Headers { get; set; }
-        public object Metadata { get; set; }
+        public Dictionary<string, string> Headers { get; set; }
+        public Dictionary<string, string> Metadata { get; set; }
         public List<BroadcastMessage> Messages { get; set; }
     }
 
@@ -21,8 +21,8 @@ namespace HeloEmail.Sdk.Sending
         public List<MailAddress> Cc { get; set; }
         public List<MailAddress> Bcc { get; set; }
         public List<string> Tags { get; set; }
-        public object Headers { get; set; }
-        public object Metadata { get; set; }
+        public Dictionary<string, string> Headers { get; set; }
+        public Dictionary<string, string> Metadata { get; set; }
         public object Data { get; set; }
     }
 }

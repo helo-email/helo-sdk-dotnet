@@ -22,8 +22,8 @@ namespace HeloEmail.Sdk.Activity
         public string Html { get; set; }
         public string Body { get; set; }
         public List<string> Tags { get; set; }
-        public object Headers { get; set; }
-        public object Metadata { get; set; }
+        public Dictionary<string, string> Headers { get; set; }
+        public Dictionary<string, string> Metadata { get; set; }
         public List<string> Attachments { get; set; }
         public MessageTracking Tracking { get; set; }
         public List<MessageEvent> Events { get; set; }

@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 
-namespace HeloEmail.Sdk.WebhookEndpoints
+namespace HeloEmail.Sdk.Webhooks
 {
-    public class CreateWebhookEndpointRequest
+    public class CreateWebhookRequest
     {
         public string Url { get; set; }
         public List<WebhookEvent> Events { get; set; }

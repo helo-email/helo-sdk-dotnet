@@ -25,8 +25,8 @@ namespace HeloEmail.Sdk.Broadcasts
         public BroadcastContentTemplate Template { get; set; }
         public List<BroadcastContentAttachment> Attachments { get; set; }
         public List<string> Tags { get; set; }
-        public object Headers { get; set; }
-        public object Metadata { get; set; }
+        public Dictionary<string, string> Headers { get; set; }
+        public Dictionary<string, string> Metadata { get; set; }
     }
 
     public class BroadcastContentTemplate

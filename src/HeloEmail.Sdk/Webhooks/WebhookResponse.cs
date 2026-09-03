@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 
-namespace HeloEmail.Sdk.WebhookEndpoints
+namespace HeloEmail.Sdk.Webhooks
 {
-    public class WebhookEndpointResponse
+    public class WebhookResponse
     {
         public string Id { get; set; }
         public string ChannelId { get; set; }
