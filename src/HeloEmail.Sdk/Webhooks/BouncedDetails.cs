@@ -1,7 +1,7 @@
 namespace HeloEmail.Sdk.Webhooks
 {
     /// <summary>
-    /// Details of a `bounced` event.
+    /// Details of an `email-bounced` event.
     /// </summary>
     public class BouncedDetails
     {

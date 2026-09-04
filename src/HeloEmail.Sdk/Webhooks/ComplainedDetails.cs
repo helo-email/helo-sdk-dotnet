@@ -1,7 +1,7 @@
 namespace HeloEmail.Sdk.Webhooks
 {
     /// <summary>
-    /// Details of a `complained` event.
+    /// Details of a `recipient-complained` event.
     /// </summary>
     public class ComplainedDetails
     {

@@ -4,12 +4,12 @@ using System.Collections.Generic;
 namespace HeloEmail.Sdk.Webhooks
 {
     /// <summary>
-    /// Payload delivered for the `resubscribed` event.
+    /// Payload delivered for the `recipient-complained` event.
     /// </summary>
-    public class ResubscribedWebhookPayload
+    public class RecipientComplainedWebhookPayload
     {
         public WebhookEvent EventType { get; set; }
-        public ResubscribedDetails Details { get; set; }
+        public ComplainedDetails Details { get; set; }
 
         /// <summary>
         /// The single recipient the event relates to.

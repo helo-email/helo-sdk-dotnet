@@ -4,12 +4,12 @@ using System.Collections.Generic;
 namespace HeloEmail.Sdk.Webhooks
 {
     /// <summary>
-    /// Payload delivered for the `bounced` event.
+    /// Payload delivered for the `email-opened` event.
     /// </summary>
-    public class BouncedWebhookPayload
+    public class EmailOpenedWebhookPayload
     {
         public WebhookEvent EventType { get; set; }
-        public BouncedDetails Details { get; set; }
+        public OpenedDetails Details { get; set; }
 
         /// <summary>
         /// The single recipient the event relates to.

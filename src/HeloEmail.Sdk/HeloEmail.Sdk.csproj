@@ -11,7 +11,7 @@
         <Company>HELO EHLO LLC</Company>
         <Product>Helo</Product>
         <Copyright>Copyright (c) HELO EHLO LLC 2026.</Copyright>
-        <Version>1.0.0-beta.7</Version>
+        <Version>1.0.0-beta.8</Version>
         <PackageTags>Helo;SDK;API</PackageTags>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>

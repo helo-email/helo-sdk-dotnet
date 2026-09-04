@@ -1,7 +1,7 @@
 namespace HeloEmail.Sdk.Webhooks
 {
     /// <summary>
-    /// Details of a `delivered` event.
+    /// Details of an `email-delivered` event.
     /// </summary>
     public class DeliveredDetails
     {

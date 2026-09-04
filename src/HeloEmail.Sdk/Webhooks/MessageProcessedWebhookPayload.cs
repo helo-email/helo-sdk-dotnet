@@ -4,17 +4,16 @@ using System.Collections.Generic;
 namespace HeloEmail.Sdk.Webhooks
 {
     /// <summary>
-    /// Payload delivered for the `clicked` event.
+    /// Payload delivered for the `message-processed` event.
     /// </summary>
-    public class ClickedWebhookPayload
+    public class MessageProcessedWebhookPayload
     {
         public WebhookEvent EventType { get; set; }
-        public ClickedDetails Details { get; set; }
 
         /// <summary>
-        /// The single recipient the event relates to.
+        /// The recipients the message was sent to.
         /// </summary>
-        public string Recipient { get; set; }
+        public List<string> Recipients { get; set; }
 
         /// <summary>
         /// Unique identifier of the message the event relates to.

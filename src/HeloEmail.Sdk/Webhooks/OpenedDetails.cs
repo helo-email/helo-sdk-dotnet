@@ -1,7 +1,7 @@
 namespace HeloEmail.Sdk.Webhooks
 {
     /// <summary>
-    /// Details of an `opened` event.
+    /// Details of an `email-opened` event.
     /// </summary>
     public class OpenedDetails
     {

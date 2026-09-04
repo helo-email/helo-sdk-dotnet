@@ -4,9 +4,9 @@ using System.Collections.Generic;
 namespace HeloEmail.Sdk.Webhooks
 {
     /// <summary>
-    /// Payload delivered for the `delivered` event.
+    /// Payload delivered for the `email-delivered` event.
     /// </summary>
-    public class DeliveredWebhookPayload
+    public class EmailDeliveredWebhookPayload
     {
         public WebhookEvent EventType { get; set; }
         public DeliveredDetails Details { get; set; }

@@ -1,7 +1,7 @@
 namespace HeloEmail.Sdk.Webhooks
 {
     /// <summary>
-    /// Details of a `clicked` event.
+    /// Details of a `link-clicked` event.
     /// </summary>
     public class ClickedDetails
     {

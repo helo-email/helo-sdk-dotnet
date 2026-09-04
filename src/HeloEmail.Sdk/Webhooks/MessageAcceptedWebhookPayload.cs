@@ -4,17 +4,16 @@ using System.Collections.Generic;
 namespace HeloEmail.Sdk.Webhooks
 {
     /// <summary>
-    /// Payload delivered for the `unsubscribed` event.
+    /// Payload delivered for the `message-accepted` event.
     /// </summary>
-    public class UnsubscribedWebhookPayload
+    public class MessageAcceptedWebhookPayload
     {
         public WebhookEvent EventType { get; set; }
-        public UnsubscribedDetails Details { get; set; }
 
         /// <summary>
-        /// The single recipient the event relates to.
+        /// The recipients the message was sent to.
         /// </summary>
-        public string Recipient { get; set; }
+        public List<string> Recipients { get; set; }
 
         /// <summary>
         /// Unique identifier of the message the event relates to.

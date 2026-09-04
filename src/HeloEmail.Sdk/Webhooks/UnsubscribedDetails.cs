@@ -1,7 +1,7 @@
 namespace HeloEmail.Sdk.Webhooks
 {
     /// <summary>
-    /// Details of an `unsubscribed` event.
+    /// Details of a `recipient-unsubscribed` event.
     /// </summary>
     public class UnsubscribedDetails
     {
