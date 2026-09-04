@@ -2,9 +2,12 @@ namespace HeloEmail.Sdk.Tests;
 
 public class BaseFixture
 {
-    protected static readonly HttpClient HttpClient = new()
+    protected const string BaseAddress = "https://api.example.test";
+
+    protected static (HttpClient HttpClient, StubHandler Handler) CreateHttpClient()
     {
-        BaseAddress = new Uri(Environment.GetEnvironmentVariable("HeloUrl") ?? "http://localhost:8000"),
-        DefaultRequestHeaders = { { "Authorization", $"Bearer {Environment.GetEnvironmentVariable("HeloApiKey")}" } }
-    };
+        var handler = new StubHandler();
+        var httpClient = new HttpClient(handler) { BaseAddress = new Uri(BaseAddress) };
+        return (httpClient, handler);
+    }
 }

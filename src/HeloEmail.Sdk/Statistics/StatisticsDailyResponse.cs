@@ -4,10 +4,10 @@ namespace HeloEmail.Sdk.Statistics
 {
     public class StatisticsDailyResponse
     {
-        public List<DailyStatisticsResult> Results { get; set; }
+        public List<StatisticsDailyResponseResult> Results { get; set; }
     }
 
-    public class DailyStatisticsResult
+    public class StatisticsDailyResponseResult
     {
         public string Timestamp { get; set; }
         public DeliveryStats Transactional { get; set; }

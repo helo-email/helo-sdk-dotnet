@@ -2,10 +2,6 @@ using System.Collections.Generic;
 
 namespace HeloEmail.Sdk.Sending
 {
-    /// <summary>
-    /// Represents either an accepted/delayed response (MessageId populated) or a failed response
-    /// (ErrorCode/ErrorMessage populated), discriminated by the Status field.
-    /// </summary>
     public class SendMessageResponse
     {
         public string Status { get; set; }

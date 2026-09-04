@@ -1,81 +1,50 @@
+using HeloEmail.Sdk;
 using HeloEmail.Sdk.Activity;
-using HeloEmail.Sdk.Errors;
-using Meziantou.Extensions.Logging.Xunit.v3;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace HeloEmail.Sdk.Tests.Activity;
 
-public class ActivityTests(ITestOutputHelper outputHelper) : BaseFixture
+public class ActivityTests : BaseFixture
 {
-    private static ActivityClient CreateClient() =>
-        new(HttpClient, XUnitLogger.CreateLogger<ActivityClient>());
-
-    [Fact]
-    public async Task ListEvents_DoesNotThrow()
+    private static (ActivityClient Client, StubHandler Handler) CreateClient()
     {
-        try
-        {
-            var result = await CreateClient().ListEvents();
-            Assert.NotNull(result);
-        }
-        catch (ApiErrorException ex)
-        {
-            outputHelper.WriteLine(ex.ResponseContent);
-            throw;
-        }
+        var (httpClient, handler) = CreateHttpClient();
+        return (new ActivityClient(httpClient, NullLogger<ActivityClient>.Instance), handler);
     }
 
     [Fact]
-    public async Task ListEvents_WithFilters_DoesNotThrow()
+    public async Task ListEvents_SendsExpectedRequest()
     {
-        try
-        {
-            var result = await CreateClient().ListEvents(
-                startDate: DateTimeOffset.UtcNow.AddDays(-7),
-                endDate: DateTimeOffset.UtcNow,
-                limit: 10,
-                mailType: MailType.Transactional,
-                eventTypes: [EventType.Delivered, EventType.Bounced]);
-            Assert.NotNull(result);
-        }
-        catch (ApiErrorException ex)
-        {
-            outputHelper.WriteLine(ex.ResponseContent);
-            throw;
-        }
+        var (client, handler) = CreateClient();
+
+        var result = await client.ListEvents();
+
+        Assert.NotNull(result);
+        Assert.Equal("GET", handler.Request!.Method.Method);
+        Assert.Equal("/activity/events", handler.Request!.RequestUri!.AbsolutePath);
     }
 
     [Fact]
-    public async Task ListMessages_DoesNotThrow()
+    public async Task ListMessages_SendsExpectedRequest()
     {
-        try
-        {
-            var result = await CreateClient().ListMessages();
-            Assert.NotNull(result);
-        }
-        catch (ApiErrorException ex)
-        {
-            outputHelper.WriteLine(ex.ResponseContent);
-            throw;
-        }
+        var (client, handler) = CreateClient();
+
+        var result = await client.ListMessages();
+
+        Assert.NotNull(result);
+        Assert.Equal("GET", handler.Request!.Method.Method);
+        Assert.Equal("/activity/messages", handler.Request!.RequestUri!.AbsolutePath);
     }
 
     [Fact]
-    public async Task ListMessages_WithFilters_DoesNotThrow()
+    public async Task RetrieveMessage_SendsExpectedRequest()
     {
-        try
-        {
-            var result = await CreateClient().ListMessages(
-                startDate: DateTimeOffset.UtcNow.AddDays(-7),
-                endDate: DateTimeOffset.UtcNow,
-                limit: 10,
-                mailType: MailType.Transactional,
-                status: MessageStatus.Sent);
-            Assert.NotNull(result);
-        }
-        catch (ApiErrorException ex)
-        {
-            outputHelper.WriteLine(ex.ResponseContent);
-            throw;
-        }
+        var (client, handler) = CreateClient();
+
+        var result = await client.RetrieveMessage("550e8400-e29b-41d4-a716-446655440000");
+
+        Assert.NotNull(result);
+        Assert.Equal("GET", handler.Request!.Method.Method);
+        Assert.Equal("/activity/messages/550e8400-e29b-41d4-a716-446655440000", handler.Request!.RequestUri!.AbsolutePath);
     }
 }

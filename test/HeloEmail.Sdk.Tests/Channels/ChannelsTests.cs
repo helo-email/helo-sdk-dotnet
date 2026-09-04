@@ -1,77 +1,81 @@
+using HeloEmail.Sdk;
 using HeloEmail.Sdk.Channels;
-using HeloEmail.Sdk.Errors;
-using Meziantou.Extensions.Logging.Xunit.v3;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace HeloEmail.Sdk.Tests.Channels;
 
-public class ChannelsTests(ITestOutputHelper outputHelper) : BaseFixture
+public class ChannelsTests : BaseFixture
 {
-    private static ChannelsClient CreateClient() =>
-        new(HttpClient, XUnitLogger.CreateLogger<ChannelsClient>());
-
-    [Fact]
-    public async Task List_DoesNotThrow()
+    private static (ChannelsClient Client, StubHandler Handler) CreateClient()
     {
-        try
-        {
-            var result = await CreateClient().List();
-            Assert.NotNull(result);
-        }
-        catch (ApiErrorException ex)
-        {
-            outputHelper.WriteLine(ex.ResponseContent);
-            throw;
-        }
+        var (httpClient, handler) = CreateHttpClient();
+        return (new ChannelsClient(httpClient, NullLogger<ChannelsClient>.Instance), handler);
     }
 
     [Fact]
-    public async Task List_WithFilters_DoesNotThrow()
+    public async Task List_SendsExpectedRequest()
     {
-        try
-        {
-            var result = await CreateClient().List(limit: 10, offset: 0, deliveryType: DeliveryType.Live);
-            Assert.NotNull(result);
-        }
-        catch (ApiErrorException ex)
-        {
-            outputHelper.WriteLine(ex.ResponseContent);
-            throw;
-        }
+        var (client, handler) = CreateClient();
+
+        var result = await client.List();
+
+        Assert.NotNull(result);
+        Assert.Equal("GET", handler.Request!.Method.Method);
+        Assert.Equal("/channels", handler.Request!.RequestUri!.AbsolutePath);
     }
 
     [Fact]
-    public async Task CreateRetrieveUpdateDelete_DoesNotThrow()
+    public async Task Create_SendsExpectedRequest()
     {
-        var client = CreateClient();
-        ChannelDetailsResponse? created = null;
-        try
-        {
-            created = await client.Create(new CreateChannelRequest
-            {
-                Name = $"test-channel-{Guid.NewGuid():N}",
-                DeliveryType = DeliveryType.Live,
-            });
-            Assert.NotNull(created);
-            Assert.NotNull(created.Id);
+        var (client, handler) = CreateClient();
 
-            var retrieved = await client.Retrieve(created.Id);
-            Assert.Equal(created.Id, retrieved.Id);
+        var result = await client.Create(new CreateChannelRequest
+        {
+            Name = "test-name",
+            DeliveryType = DeliveryType.Live,
+        });
 
-            var updated = await client.Update(created.Id, new UpdateChannelRequest
-            {
-                Name = $"test-channel-updated-{Guid.NewGuid():N}",
-            });
-            Assert.Equal(created.Id, updated.Id);
-        }
-        catch (ApiErrorException ex)
+        Assert.NotNull(result);
+        Assert.Equal("POST", handler.Request!.Method.Method);
+        Assert.Equal("/channels", handler.Request!.RequestUri!.AbsolutePath);
+    }
+
+    [Fact]
+    public async Task Retrieve_SendsExpectedRequest()
+    {
+        var (client, handler) = CreateClient();
+
+        var result = await client.Retrieve("550e8400-e29b-41d4-a716-446655440000");
+
+        Assert.NotNull(result);
+        Assert.Equal("GET", handler.Request!.Method.Method);
+        Assert.Equal("/channels/550e8400-e29b-41d4-a716-446655440000", handler.Request!.RequestUri!.AbsolutePath);
+    }
+
+    [Fact]
+    public async Task Update_SendsExpectedRequest()
+    {
+        var (client, handler) = CreateClient();
+
+        var result = await client.Update("550e8400-e29b-41d4-a716-446655440000", new UpdateChannelRequest
         {
-            outputHelper.WriteLine(ex.ResponseContent);
-            throw;
-        }
-        finally
-        {
-            if (created != null)
-                await client.Delete(created.Id);
-        }
+            Name = "test-name",
+            DeliveryType = DeliveryType.Live,
+        });
+
+        Assert.NotNull(result);
+        Assert.Equal("PATCH", handler.Request!.Method.Method);
+        Assert.Equal("/channels/550e8400-e29b-41d4-a716-446655440000", handler.Request!.RequestUri!.AbsolutePath);
+    }
+
+    [Fact]
+    public async Task Delete_SendsExpectedRequest()
+    {
+        var (client, handler) = CreateClient();
+
+        await client.Delete("550e8400-e29b-41d4-a716-446655440000");
+
+        Assert.Equal("DELETE", handler.Request!.Method.Method);
+        Assert.Equal("/channels/550e8400-e29b-41d4-a716-446655440000", handler.Request!.RequestUri!.AbsolutePath);
     }
 }

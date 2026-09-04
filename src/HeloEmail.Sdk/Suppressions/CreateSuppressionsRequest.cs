@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using HeloEmail.Sdk.Activity;
 
 namespace HeloEmail.Sdk.Suppressions
 {

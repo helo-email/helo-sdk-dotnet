@@ -14,5 +14,7 @@ namespace HeloEmail.Sdk.Activity
         public MessageStatus Status { get; set; }
         public string Subject { get; set; }
         public List<string> Recipients { get; set; }
+        public List<string> Tags { get; set; }
+        public MessageStatistics Statistics { get; set; }
     }
 }

@@ -6,6 +6,9 @@ namespace HeloEmail.Sdk.Activity
 {
     public interface IActivityClient
     {
+        /// <summary>
+        /// List activity events
+        /// </summary>
         Task<PaginatedEventsResponse> ListEvents(
             string channelId = null,
             string messageId = null,
@@ -19,6 +22,9 @@ namespace HeloEmail.Sdk.Activity
             MailType? mailType = null,
             IEnumerable<EventType> eventTypes = null);
 
+        /// <summary>
+        /// List messages
+        /// </summary>
         Task<PaginatedMessagesResponse> ListMessages(
             string channelId = null,
             long? after = null,
@@ -31,6 +37,9 @@ namespace HeloEmail.Sdk.Activity
             MailType? mailType = null,
             MessageStatus? status = null);
 
+        /// <summary>
+        /// Retrieve message details
+        /// </summary>
         Task<MessageDetailsResponse> RetrieveMessage(string id);
     }
 }

@@ -1,77 +1,60 @@
-using HeloEmail.Sdk.Activity;
-using HeloEmail.Sdk.Errors;
+using HeloEmail.Sdk;
 using HeloEmail.Sdk.Suppressions;
-using Meziantou.Extensions.Logging.Xunit.v3;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace HeloEmail.Sdk.Tests.Suppressions;
 
-public class SuppressionsTests(ITestOutputHelper outputHelper) : BaseFixture
+public class SuppressionsTests : BaseFixture
 {
-    private const string ChannelId = "241efbe3-3e50-4192-ab69-f8c9ccb10ae1";
-
-    private static SuppressionsClient CreateClient() =>
-        new(HttpClient, XUnitLogger.CreateLogger<SuppressionsClient>());
-
-    [Fact]
-    public async Task List_DoesNotThrow()
+    private static (SuppressionsClient Client, StubHandler Handler) CreateClient()
     {
-        try
-        {
-            var result = await CreateClient().List(ChannelId, MailType.Transactional);
-            Assert.NotNull(result);
-        }
-        catch (ApiErrorException ex)
-        {
-            outputHelper.WriteLine(ex.ResponseContent);
-            throw;
-        }
+        var (httpClient, handler) = CreateHttpClient();
+        return (new SuppressionsClient(httpClient, NullLogger<SuppressionsClient>.Instance), handler);
     }
 
     [Fact]
-    public async Task List_WithFilters_DoesNotThrow()
+    public async Task List_SendsExpectedRequest()
     {
-        try
-        {
-            var result = await CreateClient().List(ChannelId, MailType.Transactional,
-                reason: SuppressionReason.Bounce, limit: 10, offset: 0);
-            Assert.NotNull(result);
-        }
-        catch (ApiErrorException ex)
-        {
-            outputHelper.WriteLine(ex.ResponseContent);
-            throw;
-        }
+        var (client, handler) = CreateClient();
+
+        var result = await client.List("550e8400-e29b-41d4-a716-446655440000", MailType.Transactional);
+
+        Assert.NotNull(result);
+        Assert.Equal("GET", handler.Request!.Method.Method);
+        Assert.Equal("/suppressions", handler.Request!.RequestUri!.AbsolutePath);
     }
 
     [Fact]
-    public async Task CreateRemove_DoesNotThrow()
+    public async Task Create_SendsExpectedRequest()
     {
-        var client = CreateClient();
-        var email = $"suppressed-{Guid.NewGuid():N}@example.com";
-        try
-        {
-            var created = await client.Create(new CreateSuppressionsRequest
-            {
-                ChannelId = ChannelId,
-                MailType = MailType.Transactional,
-                Emails = [email],
-            });
-            Assert.NotNull(created);
-            Assert.NotNull(created.Results);
+        var (client, handler) = CreateClient();
 
-            var removed = await client.Remove(new RemoveSuppressionsRequest
-            {
-                ChannelId = ChannelId,
-                MailType = MailType.Transactional,
-                Emails = [email],
-            });
-            Assert.NotNull(removed);
-            Assert.NotNull(removed.Results);
-        }
-        catch (ApiErrorException ex)
+        var result = await client.Create(new CreateSuppressionsRequest
         {
-            outputHelper.WriteLine(ex.ResponseContent);
-            throw;
-        }
+            ChannelId = "550e8400-e29b-41d4-a716-446655440000",
+            MailType = MailType.Transactional,
+            Emails = ["test@example.com"],
+        });
+
+        Assert.NotNull(result);
+        Assert.Equal("POST", handler.Request!.Method.Method);
+        Assert.Equal("/suppressions", handler.Request!.RequestUri!.AbsolutePath);
+    }
+
+    [Fact]
+    public async Task Remove_SendsExpectedRequest()
+    {
+        var (client, handler) = CreateClient();
+
+        var result = await client.Remove(new RemoveSuppressionsRequest
+        {
+            ChannelId = "550e8400-e29b-41d4-a716-446655440000",
+            MailType = MailType.Transactional,
+            Emails = ["test@example.com"],
+        });
+
+        Assert.NotNull(result);
+        Assert.Equal("POST", handler.Request!.Method.Method);
+        Assert.Equal("/suppressions/remove", handler.Request!.RequestUri!.AbsolutePath);
     }
 }

@@ -1,64 +1,103 @@
 using HeloEmail.Sdk.Domains;
-using HeloEmail.Sdk.Errors;
-using Meziantou.Extensions.Logging.Xunit.v3;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace HeloEmail.Sdk.Tests.Domains;
 
-public class DomainsTests(ITestOutputHelper outputHelper) : BaseFixture
+public class DomainsTests : BaseFixture
 {
-    private static DomainsClient CreateClient() =>
-        new(HttpClient, XUnitLogger.CreateLogger<DomainsClient>());
-
-    [Fact]
-    public async Task List_DoesNotThrow()
+    private static (DomainsClient Client, StubHandler Handler) CreateClient()
     {
-        try
-        {
-            var result = await CreateClient().List();
-            Assert.NotNull(result);
-        }
-        catch (ApiErrorException ex)
-        {
-            outputHelper.WriteLine(ex.ResponseContent);
-            throw;
-        }
+        var (httpClient, handler) = CreateHttpClient();
+        return (new DomainsClient(httpClient, NullLogger<DomainsClient>.Instance), handler);
     }
 
     [Fact]
-    public async Task List_WithFilters_DoesNotThrow()
+    public async Task List_SendsExpectedRequest()
     {
-        try
-        {
-            var result = await CreateClient().List(limit: 10, offset: 0);
-            Assert.NotNull(result);
-        }
-        catch (ApiErrorException ex)
-        {
-            outputHelper.WriteLine(ex.ResponseContent);
-            throw;
-        }
+        var (client, handler) = CreateClient();
+
+        var result = await client.List();
+
+        Assert.NotNull(result);
+        Assert.Equal("GET", handler.Request!.Method.Method);
+        Assert.Equal("/domains", handler.Request!.RequestUri!.AbsolutePath);
     }
 
     [Fact]
-    public async Task CreateAndRetrieve_DoesNotThrow()
+    public async Task Create_SendsExpectedRequest()
     {
-        var client = CreateClient();
-        try
-        {
-            var created = await client.Create(new CreateDomainRequest
-            {
-                Name = $"test-{Guid.NewGuid():N}.example.com",
-            });
-            Assert.NotNull(created);
-            Assert.NotNull(created.Id);
+        var (client, handler) = CreateClient();
 
-            var retrieved = await client.Retrieve(created.Id);
-            Assert.Equal(created.Id, retrieved.Id);
-        }
-        catch (ApiErrorException ex)
+        var result = await client.Create(new CreateDomainRequest
         {
-            outputHelper.WriteLine(ex.ResponseContent);
-            throw;
-        }
+            Name = "test-name",
+            ChannelIds = ["550e8400-e29b-41d4-a716-446655440000"],
+        });
+
+        Assert.NotNull(result);
+        Assert.Equal("POST", handler.Request!.Method.Method);
+        Assert.Equal("/domains", handler.Request!.RequestUri!.AbsolutePath);
+    }
+
+    [Fact]
+    public async Task Retrieve_SendsExpectedRequest()
+    {
+        var (client, handler) = CreateClient();
+
+        var result = await client.Retrieve("550e8400-e29b-41d4-a716-446655440000");
+
+        Assert.NotNull(result);
+        Assert.Equal("GET", handler.Request!.Method.Method);
+        Assert.Equal("/domains/550e8400-e29b-41d4-a716-446655440000", handler.Request!.RequestUri!.AbsolutePath);
+    }
+
+    [Fact]
+    public async Task Update_SendsExpectedRequest()
+    {
+        var (client, handler) = CreateClient();
+
+        var result = await client.Update("550e8400-e29b-41d4-a716-446655440000", new UpdateDomainRequest
+        {
+            ChannelIds = ["550e8400-e29b-41d4-a716-446655440000"],
+        });
+
+        Assert.NotNull(result);
+        Assert.Equal("PATCH", handler.Request!.Method.Method);
+        Assert.Equal("/domains/550e8400-e29b-41d4-a716-446655440000", handler.Request!.RequestUri!.AbsolutePath);
+    }
+
+    [Fact]
+    public async Task Delete_SendsExpectedRequest()
+    {
+        var (client, handler) = CreateClient();
+
+        await client.Delete("550e8400-e29b-41d4-a716-446655440000");
+
+        Assert.Equal("DELETE", handler.Request!.Method.Method);
+        Assert.Equal("/domains/550e8400-e29b-41d4-a716-446655440000", handler.Request!.RequestUri!.AbsolutePath);
+    }
+
+    [Fact]
+    public async Task Verify_SendsExpectedRequest()
+    {
+        var (client, handler) = CreateClient();
+
+        var result = await client.Verify("550e8400-e29b-41d4-a716-446655440000");
+
+        Assert.NotNull(result);
+        Assert.Equal("POST", handler.Request!.Method.Method);
+        Assert.Equal("/domains/550e8400-e29b-41d4-a716-446655440000/verify", handler.Request!.RequestUri!.AbsolutePath);
+    }
+
+    [Fact]
+    public async Task RotateKey_SendsExpectedRequest()
+    {
+        var (client, handler) = CreateClient();
+
+        var result = await client.RotateKey("550e8400-e29b-41d4-a716-446655440000");
+
+        Assert.NotNull(result);
+        Assert.Equal("POST", handler.Request!.Method.Method);
+        Assert.Equal("/domains/550e8400-e29b-41d4-a716-446655440000/rotate-key", handler.Request!.RequestUri!.AbsolutePath);
     }
 }

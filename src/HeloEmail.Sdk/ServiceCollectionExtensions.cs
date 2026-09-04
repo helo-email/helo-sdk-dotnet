@@ -14,8 +14,8 @@ namespace HeloEmail.Sdk
     public static class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds the Helo SDK to your service collection. If <c>apiKey</c> is not provided, it will be pulled from
-        /// the HELO_API_KEY environment variable.
+        /// Adds the Helo SDK to your service collection. If <c>apiKey</c> is not provided, it will be
+        /// pulled from the HELO_API_KEY environment variable.
         /// </summary>
         /// <param name="services">Service collection.</param>
         /// <param name="apiKey">Optional API key. Pulled from HELO_API_KEY environment variable otherwise.</param>
@@ -29,8 +29,9 @@ namespace HeloEmail.Sdk
         }
 
         /// <summary>
-        /// Adds the Helo API client classes to your service collection. This method should only be used if you
-        /// are adding an HttpClient separately. Otherwise, use the <c>AddHelo</c> method.
+        /// Adds the Helo API client classes to your service collection. This method should only be
+        /// used if you are adding an HttpClient separately. Otherwise, use the
+        /// <c>AddHelo</c> method.
         /// </summary>
         /// <param name="services">Service collection.</param>
         public static void AddHeloApiClients(this IServiceCollection services)
