@@ -89,8 +89,3 @@ services.AddHelo(apiKey, baseUrl: "https://api.helohq.com");
 ## Requirements
 
 - netstandard2.0 or later
-
----
-
-This SDK is generated from the Helo API OpenAPI description. Do not edit it by
-hand — changes belong in the generator.
