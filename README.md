@@ -78,6 +78,46 @@ catch (ApiErrorException ex)
 }
 ```
 
+## Handling webhooks
+
+`WebhookParser.Parse` reads the `eventType` off a raw webhook request body and deserializes it
+into that event's payload type:
+
+```csharp
+using HeloEmail.Sdk.Webhooks;
+
+var webhookPayload = WebhookParser.Parse(requestBody);
+if (webhookPayload is MessageAcceptedWebhookPayload messageAccepted)
+{
+    Console.WriteLine($"message-accepted: {messageAccepted.MessageId}");
+    return;
+}
+if (webhookPayload is EmailDeliveredWebhookPayload emailDelivered)
+{
+    Console.WriteLine($"email-delivered: {emailDelivered.Recipient}");
+    return;
+}
+```
+
+`Parse` returns `null` when the body carries no `eventType`, and throws
+`ArgumentOutOfRangeException` for an event this SDK does not know about.
+
+| Event | Payload |
+| ----- | ------- |
+| `message-accepted` | `MessageAcceptedWebhookPayload` |
+| `message-processed` | `MessageProcessedWebhookPayload` |
+| `email-delivered` | `EmailDeliveredWebhookPayload` |
+| `email-bounced` | `EmailBouncedWebhookPayload` |
+| `email-opened` | `EmailOpenedWebhookPayload` |
+| `link-clicked` | `LinkClickedWebhookPayload` |
+| `recipient-complained` | `RecipientComplainedWebhookPayload` |
+| `recipient-unsubscribed` | `RecipientUnsubscribedWebhookPayload` |
+| `recipient-resubscribed` | `RecipientResubscribedWebhookPayload` |
+| `domain-key-verified` | `DomainKeyVerifiedPayload` |
+| `domain-key-verification-failed` | `DomainKeyVerificationFailedPayload` |
+| `return-path-domain-verified` | `ReturnPathDomainVerifiedPayload` |
+| `return-path-domain-verification-failed` | `ReturnPathDomainVerificationFailedPayload` |
+
 ## Configuration
 
 `AddHelo` accepts an optional `baseUrl` to target a different API endpoint:
