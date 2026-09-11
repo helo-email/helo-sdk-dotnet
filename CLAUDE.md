@@ -34,6 +34,11 @@ dotnet test                                         # run the generated tests (n
 - `ServiceCollectionExtensions` — `AddHelo(apiKey, baseUrl)` registers the
   named `HttpClient` (`KeyedServices.HeloApiClientName`) plus every domain client.
 
+- `Webhooks/WebhookSignature` — HMAC-SHA256 verification of the `X-Helo-Webhook-Signature`
+  header (`Verify`, `IsValid`, `Generate`); `WebhookSignatureException.Error` says why a delivery
+  was rejected. `Webhooks/WebhookParser` dispatches a verified body to its
+  payload type by `eventType`.
+
 Types shared by two or more domains live in the root `HeloEmail.Sdk` namespace; the rest sit in
 their domain's sub-namespace, and error payloads in `HeloEmail.Sdk.Errors`.
 
