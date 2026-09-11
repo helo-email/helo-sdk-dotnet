@@ -20,9 +20,9 @@ namespace HeloEmail.Sdk
     public static class SdkUserAgent
     {
         /// <summary>The header value, e.g.
-        /// <c>HeloEmail.Sdk/1.0.0-beta.9 (.NET 8.0.0; macos/Arm64)</c>.</summary>
+        /// <c>HeloEmail.Sdk/1.0.0-beta.10 (.NET 8.0.0; macos/Arm64)</c>.</summary>
         public static readonly string Value =
-            $"HeloEmail.Sdk/1.0.0-beta.9 " +
+            $"HeloEmail.Sdk/1.0.0-beta.10 " +
             $"({Framework()}; {PlatformName()}/{RuntimeInformation.OSArchitecture})";
 
         // FrameworkDescription is free-form (".NET Framework 4.8.9032.0",
