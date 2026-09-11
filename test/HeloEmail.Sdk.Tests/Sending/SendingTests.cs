@@ -13,11 +13,11 @@ public class SendingTests : BaseFixture
     }
 
     [Fact]
-    public async Task Transactional_SendsExpectedRequest()
+    public async Task SendTransactional_SendsExpectedRequest()
     {
         var (client, handler) = CreateClient();
 
-        var result = await client.Transactional(new SendMessageRequest
+        var result = await client.SendTransactional(new SendMessageRequest
         {
             From = new MailAddress { Email = "from@yourdomain.com", Name = "From name" },
             To = [new MailAddress { Email = "to@example.com", Name = "To name" }],
@@ -35,11 +35,11 @@ public class SendingTests : BaseFixture
     }
 
     [Fact]
-    public async Task TransactionalBatch_SendsExpectedRequest()
+    public async Task SendTransactionalBatch_SendsExpectedRequest()
     {
         var (client, handler) = CreateClient();
 
-        var result = await client.TransactionalBatch(new SendMessageBatchRequest
+        var result = await client.SendTransactionalBatch(new SendMessageBatchRequest
         {
             Requests = [
                 new SendMessageRequest
@@ -62,11 +62,11 @@ public class SendingTests : BaseFixture
     }
 
     [Fact]
-    public async Task Broadcast_SendsExpectedRequest()
+    public async Task SendBroadcast_SendsExpectedRequest()
     {
         var (client, handler) = CreateClient();
 
-        var result = await client.Broadcast(new SendBroadcastRequest
+        var result = await client.SendBroadcast(new SendBroadcastRequest
         {
             From = new MailAddress { Email = "test@example.com", Name = "test-name" },
             Template = new SendBroadcastRequestTemplate
@@ -94,11 +94,11 @@ public class SendingTests : BaseFixture
     }
 
     [Fact]
-    public async Task BroadcastMessage_SendsExpectedRequest()
+    public async Task SendBroadcastMessage_SendsExpectedRequest()
     {
         var (client, handler) = CreateClient();
 
-        var result = await client.BroadcastMessage(new SendMessageRequest
+        var result = await client.SendBroadcastMessage(new SendMessageRequest
         {
             From = new MailAddress { Email = "from@yourdomain.com", Name = "From name" },
             To = [new MailAddress { Email = "to@example.com", Name = "To name" }],

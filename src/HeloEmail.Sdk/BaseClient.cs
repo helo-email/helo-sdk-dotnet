@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -11,6 +12,40 @@ using Microsoft.Extensions.Logging;
 
 namespace HeloEmail.Sdk
 {
+    /// <summary>
+    /// Identifies the SDK and the runtime it is running on to the API. Built once
+    /// and exposed publicly so a caller configuring their own <see cref="HttpClient"/>
+    /// can send the same header the DI registration does.
+    /// </summary>
+    public static class SdkUserAgent
+    {
+        /// <summary>The header value, e.g.
+        /// <c>HeloEmail.Sdk/1.0.0-beta.9 (.NET 8.0.0; macos/Arm64)</c>.</summary>
+        public static readonly string Value =
+            $"HeloEmail.Sdk/1.0.0-beta.9 " +
+            $"({Framework()}; {PlatformName()}/{RuntimeInformation.OSArchitecture})";
+
+        // FrameworkDescription is free-form (".NET Framework 4.8.9032.0",
+        // ".NET 8.0.0") and can contain parentheses, which would prematurely
+        // close the User-Agent comment.
+        private static string Framework()
+        {
+            var description = RuntimeInformation.FrameworkDescription;
+            if (string.IsNullOrWhiteSpace(description)) return "unknown";
+            return description.Replace('(', ' ').Replace(')', ' ').Replace('\\', ' ').Trim();
+        }
+
+        // OSDescription is the kernel banner on macOS and Linux — far too long
+        // for a header — so report the platform family instead.
+        private static string PlatformName()
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) return "windows";
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) return "macos";
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) return "linux";
+            return "unknown";
+        }
+    }
+
     /// <summary>
     /// HTTP, JSON and error-handling plumbing shared by every domain client.
     /// </summary>

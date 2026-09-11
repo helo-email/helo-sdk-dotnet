@@ -5,7 +5,7 @@
         <RootNamespace>HeloEmail.Sdk</RootNamespace>
         <RepositoryUrl>https://github.com/helo-email/helo-sdk-dotnet</RepositoryUrl>
         <PackageProjectUrl>https://api.helohq.com</PackageProjectUrl>
-        <Description>Helo API</Description>
+        <Description>Helo Email API (https://helohq.com)</Description>
         <PackageId>HeloEmail.Sdk</PackageId>
         <Authors>Helo Email</Authors>
         <Company>HELO EHLO LLC</Company>

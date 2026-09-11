@@ -17,7 +17,7 @@ namespace HeloEmail.Sdk.Sending
         /// <summary>
         /// Send a transactional email
         /// </summary>
-        public Task<SendMessageAcceptedResponse> Transactional(
+        public Task<SendMessageAcceptedResponse> SendTransactional(
             SendMessageRequest request,
             string channelId = null,
             string idempotencyKey = null)
@@ -34,7 +34,7 @@ namespace HeloEmail.Sdk.Sending
         /// <summary>
         /// Send transactional emails in batch
         /// </summary>
-        public Task<SendMessageBatchResponse> TransactionalBatch(
+        public Task<SendMessageBatchResponse> SendTransactionalBatch(
             SendMessageBatchRequest request,
             string channelId = null,
             string idempotencyKey = null)
@@ -48,10 +48,7 @@ namespace HeloEmail.Sdk.Sending
             return Post<SendMessageBatchRequest, SendMessageBatchResponse>("/send/transactional/batch", request, headers);
         }
 
-        /// <summary>
-        /// Send a broadcast email
-        /// </summary>
-        public Task<SendBroadcastResponse> Broadcast(
+        public Task<SendBroadcastResponse> SendBroadcast(
             SendBroadcastRequest request,
             string channelId = null,
             string idempotencyKey = null)
@@ -68,7 +65,7 @@ namespace HeloEmail.Sdk.Sending
         /// <summary>
         /// Send a single broadcast email
         /// </summary>
-        public Task<SendMessageAcceptedResponse> BroadcastMessage(
+        public Task<SendMessageAcceptedResponse> SendBroadcastMessage(
             SendMessageRequest request,
             string channelId = null,
             string idempotencyKey = null)

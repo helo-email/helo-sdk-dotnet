@@ -1,6 +1,6 @@
 # Helo .NET SDK
 
-Helo API
+Helo Email API (https://helohq.com)
 
 ## Installation
 
@@ -41,9 +41,14 @@ builder.Services
     {
         c.BaseAddress = new Uri("https://api.helohq.com");
         c.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
+        c.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", SdkUserAgent.Value);
     })
     .AddAsKeyed();
 ```
+
+`SdkUserAgent.Value` names the package, its version and the runtime it is on.
+`AddHelo` sends it for you; send it here too so requests from a
+self-configured client stay identifiable in the API logs.
 
 ## Available clients
 

@@ -7,22 +7,22 @@ The examples below assume you have an `IHeloApiClient helo` — see the
 
 | Method | HTTP request | Description |
 | ------ | ------------ | ----------- |
-| [**Transactional**](#transactional) | **POST** /send/transactional | Send a transactional email |
-| [**TransactionalBatch**](#transactionalbatch) | **POST** /send/transactional/batch | Send transactional emails in batch |
-| [**Broadcast**](#broadcast) | **POST** /send/broadcast | Send a broadcast email |
-| [**BroadcastMessage**](#broadcastmessage) | **POST** /send/broadcast/message | Send a single broadcast email |
+| [**SendTransactional**](#sendtransactional) | **POST** /send/transactional | Send a transactional email |
+| [**SendTransactionalBatch**](#sendtransactionalbatch) | **POST** /send/transactional/batch | Send transactional emails in batch |
+| [**SendBroadcast**](#sendbroadcast) | **POST** /send/broadcast |  |
+| [**SendBroadcastMessage**](#sendbroadcastmessage) | **POST** /send/broadcast/message | Send a single broadcast email |
 
-## Transactional
+## SendTransactional
 
 `POST /send/transactional`
 
 Sends a single transactional email such as receipts, confirmations, or notifications.
 
-```csharp Sending_transactional
+```csharp Sending_sendTransactional
 using HeloEmail.Sdk;
 using HeloEmail.Sdk.Sending;
 
-var sendMessageAccepted = await helo.Sending.Transactional(new SendMessageRequest
+var sendMessageAccepted = await helo.Sending.SendTransactional(new SendMessageRequest
 {
     From = new MailAddress { Email = "from@yourdomain.com", Name = "From name" },
     To = [new MailAddress { Email = "to@example.com", Name = "To name" }],
@@ -33,17 +33,17 @@ var sendMessageAccepted = await helo.Sending.Transactional(new SendMessageReques
 }, channelId: "550e8400-e29b-41d4-a716-446655440000", idempotencyKey: "test-idempotencyKey");
 ```
 
-## TransactionalBatch
+## SendTransactionalBatch
 
 `POST /send/transactional/batch`
 
 Sends multiple transactional emails in a single API request for better performance.
 
-```csharp Sending_transactionalBatch
+```csharp Sending_sendTransactionalBatch
 using HeloEmail.Sdk;
 using HeloEmail.Sdk.Sending;
 
-var sendMessageBatch = await helo.Sending.TransactionalBatch(new SendMessageBatchRequest
+var sendMessageBatch = await helo.Sending.SendTransactionalBatch(new SendMessageBatchRequest
 {
     Requests = [
         new SendMessageRequest
@@ -59,17 +59,15 @@ var sendMessageBatch = await helo.Sending.TransactionalBatch(new SendMessageBatc
 }, channelId: "550e8400-e29b-41d4-a716-446655440000", idempotencyKey: "test-idempotencyKey");
 ```
 
-## Broadcast
+## SendBroadcast
 
 `POST /send/broadcast`
 
-Sends a broadcast email to multiple recipients for marketing or announcement purposes.
-
-```csharp Sending_broadcast
+```csharp Sending_sendBroadcast
 using HeloEmail.Sdk;
 using HeloEmail.Sdk.Sending;
 
-var sendBroadcast = await helo.Sending.Broadcast(new SendBroadcastRequest
+var sendBroadcast = await helo.Sending.SendBroadcast(new SendBroadcastRequest
 {
     From = new MailAddress { Email = "test@example.com", Name = "test-name" },
     Template = new SendBroadcastRequestTemplate
@@ -90,17 +88,17 @@ var sendBroadcast = await helo.Sending.Broadcast(new SendBroadcastRequest
 }, channelId: "550e8400-e29b-41d4-a716-446655440000", idempotencyKey: "test-idempotencyKey");
 ```
 
-## BroadcastMessage
+## SendBroadcastMessage
 
 `POST /send/broadcast/message`
 
 Sends a single broadcast email message.
 
-```csharp Sending_broadcastMessage
+```csharp Sending_sendBroadcastMessage
 using HeloEmail.Sdk;
 using HeloEmail.Sdk.Sending;
 
-var sendMessageAccepted = await helo.Sending.BroadcastMessage(new SendMessageRequest
+var sendMessageAccepted = await helo.Sending.SendBroadcastMessage(new SendMessageRequest
 {
     From = new MailAddress { Email = "from@yourdomain.com", Name = "From name" },
     To = [new MailAddress { Email = "to@example.com", Name = "To name" }],

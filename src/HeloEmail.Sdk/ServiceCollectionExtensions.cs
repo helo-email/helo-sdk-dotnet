@@ -56,6 +56,7 @@ namespace HeloEmail.Sdk
                 {
                     c.BaseAddress = baseUri;
                     c.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
+                    c.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", SdkUserAgent.Value);
                 })
                 .AddAsKeyed();
         }
