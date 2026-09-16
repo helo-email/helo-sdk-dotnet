@@ -83,6 +83,60 @@ catch (ApiErrorException ex)
 }
 ```
 
+## Webhook signature verification
+
+Webhook deliveries are signed with the endpoint's signing key. Verify every delivery before
+acting on it, against the **raw** request body — parsing and re-serializing the JSON changes
+the bytes and the signature will not match.
+
+```csharp
+using HeloEmail.Sdk.Webhooks;
+
+[HttpPost("/webhooks/helo")]
+public async Task<IActionResult> Receive()
+{
+    using var reader = new StreamReader(Request.Body);
+    var rawBody = await reader.ReadToEndAsync(); // raw body, exactly as received
+
+    try
+    {
+        WebhookSignature.Verify(
+            Request.Headers["X-Helo-Webhook-Signature"],
+            rawBody,
+            Environment.GetEnvironmentVariable("HELO_WEBHOOK_SIGNING_KEY"));
+    }
+    catch (WebhookSignatureException)
+    {
+        return BadRequest();
+    }
+
+    // ... handle the event, then acknowledge quickly
+    return NoContent();
+}
+```
+
+`Verify` returns normally when the signature is valid and throws `WebhookSignatureException`
+otherwise. Its `Error` says why, so a stale delivery can be treated differently from a
+genuinely bad one:
+
+| `Error` | Meaning |
+| --- | --- |
+| `MalformedHeader` | The header was not in the expected format |
+| `UnsupportedVersion` | The delivery used a signing scheme this SDK version cannot verify — upgrade the package |
+| `TimestampSkew` | Correctly signed, but too old to accept — possible replay, or clock drift |
+| `SignatureMismatch` | Wrong signing key, or the body was modified in transit |
+
+If you only want a boolean, use `WebhookSignature.IsValid` instead. Both accept the body as a
+`string` or as raw `byte[]`.
+
+The signature header may carry several versions at once (`t=...,v1=...,v2=...`) while a new
+signing scheme is being rolled out. This SDK verifies against the newest version it supports
+(`WebhookSignature.SupportedVersions`) and ignores elements it does not recognize, so a rollout
+will not break this integration.
+
+To compute a signature yourself — signing a fixture in tests, for example — use
+`WebhookSignature.Generate(payload, signingKey, timestamp)`.
+
 ## Handling webhooks
 
 `WebhookParser.Parse` reads the `eventType` off a raw webhook request body and deserializes it
