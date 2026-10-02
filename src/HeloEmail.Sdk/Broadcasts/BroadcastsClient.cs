@@ -23,6 +23,8 @@ namespace HeloEmail.Sdk.Broadcasts
             string channelId,
             BroadcastStatus? status = null,
             string subject = null,
+            DateTimeOffset? from = null,
+            DateTimeOffset? to = null,
             int? limit = null,
             int? offset = null)
         {
@@ -31,6 +33,8 @@ namespace HeloEmail.Sdk.Broadcasts
                 ("channelId", channelId),
                 ("status", ToQueryValue(status)),
                 ("subject", subject),
+                ("from", from?.ToString("O")),
+                ("to", to?.ToString("O")),
                 ("limit", limit?.ToString(CultureInfo.InvariantCulture)),
                 ("offset", offset?.ToString(CultureInfo.InvariantCulture)),
             };

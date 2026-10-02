@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 
 namespace HeloEmail.Sdk.Broadcasts
@@ -11,6 +12,8 @@ namespace HeloEmail.Sdk.Broadcasts
             string channelId,
             BroadcastStatus? status = null,
             string subject = null,
+            DateTimeOffset? from = null,
+            DateTimeOffset? to = null,
             int? limit = null,
             int? offset = null);
 
