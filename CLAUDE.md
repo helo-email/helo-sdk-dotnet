@@ -20,7 +20,8 @@ cd ../helo-sdk-generator && ./exe/helo-sdk-generator public
 ```bash
 dotnet build                                        # build the SDK and its tests
 dotnet test                                         # run the generated tests (no server needed)
-./scripts/publish.sh <version>                      # pack and push (requires helo_pkg_token)
+git tag <version> && git push origin <version>      # test, then publish to nuget.org (.github/workflows/publish.yml)
+./scripts/publish.sh <version>                      # pack and push to GitHub Packages (requires helo_pkg_token)
 ```
 
 ## Architecture
