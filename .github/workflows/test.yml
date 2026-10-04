@@ -2,7 +2,7 @@ name: Tests
 
 on:
   pull_request:
-  workflow_call: # publish.yml runs these before publishing a tag
+  workflow_call: # release.yml and publish.yml run these before releasing
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

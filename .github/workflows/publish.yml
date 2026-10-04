@@ -2,6 +2,8 @@ name: Publish
 
 # Publishes to nuget.org when a version tag (e.g. 1.0.1, 1.0.1-beta.1) is
 # pushed, once the same tests that gate pull requests pass.
+# release.yml also dispatches it against the tag it creates, since tags pushed
+# with GITHUB_TOKEN don't trigger `push` workflows.
 on:
   push:
     tags: ["[0-9]+.[0-9]+.[0-9]+*"]
