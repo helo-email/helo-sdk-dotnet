@@ -71,6 +71,7 @@ public class SendingTests : BaseFixture
             From = new MailAddress { Email = "test@example.com", Name = "test-name" },
             Template = new SendBroadcastRequestTemplate
             {
+                Id = "550e8400-e29b-41d4-a716-446655440000",
                 Subject = "test-subject",
                 Html = "test-html",
                 Text = "test-text",

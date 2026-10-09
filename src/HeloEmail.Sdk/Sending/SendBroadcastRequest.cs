@@ -12,7 +12,7 @@ namespace HeloEmail.Sdk.Sending
         public List<MailAddress> ReplyTo { get; set; }
 
         /// <summary>
-        /// Email template applied to every message in the broadcast. At least one of `html` or `text` is required.
+        /// Email template applied to every message in the broadcast. Either reference a stored template by `id`, or supply `subject` and at least one of `html` or `text` inline.
         /// </summary>
         public SendBroadcastRequestTemplate Template { get; set; }
 
@@ -48,12 +48,17 @@ namespace HeloEmail.Sdk.Sending
     }
 
     /// <summary>
-    /// Email template applied to every message in the broadcast. At least one of `html` or `text` is required.
+    /// Email template applied to every message in the broadcast. Either reference a stored template by `id`, or supply `subject` and at least one of `html` or `text` inline.
     /// </summary>
     public class SendBroadcastRequestTemplate
     {
         /// <summary>
-        /// Subject line. Max 256 characters. Supports `{{variable}}` syntax.
+        /// ID of a stored template to send. Its content is captured when the broadcast is accepted, so later edits to the template don't affect it. Cannot be combined with `subject`, `html` or `text`.
+        /// </summary>
+        public string Id { get; set; }
+
+        /// <summary>
+        /// Subject line. Max 256 characters. Supports `{{variable}}` syntax. Required unless `id` is provided.
         /// </summary>
         public string Subject { get; set; }
 

@@ -48,6 +48,9 @@ namespace HeloEmail.Sdk.Sending
             return Post<SendMessageBatchRequest, SendMessageBatchResponse>("/send/transactional/batch", request, headers);
         }
 
+        /// <summary>
+        /// Send a broadcast
+        /// </summary>
         public Task<SendBroadcastResponse> SendBroadcast(
             SendBroadcastRequest request,
             string channelId = null,

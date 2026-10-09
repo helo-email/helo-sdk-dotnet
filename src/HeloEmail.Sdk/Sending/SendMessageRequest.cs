@@ -12,6 +12,10 @@ namespace HeloEmail.Sdk.Sending
         public string Subject { get; set; }
         public string Html { get; set; }
         public string Text { get; set; }
+
+        /// <summary>
+        /// Either reference a stored template by `id`, or supply `subject` and at least one of `html` or `text` inline.
+        /// </summary>
         public SendMessageRequestTemplate Template { get; set; }
         public SendMessageRequestTracking Tracking { get; set; }
         public List<Attachment> Attachments { get; set; }
@@ -20,8 +24,15 @@ namespace HeloEmail.Sdk.Sending
         public Dictionary<string, string> Metadata { get; set; }
     }
 
+    /// <summary>
+    /// Either reference a stored template by `id`, or supply `subject` and at least one of `html` or `text` inline.
+    /// </summary>
     public class SendMessageRequestTemplate
     {
+        /// <summary>
+        /// ID of a stored template to send. Cannot be combined with `subject`, `html` or `text`.
+        /// </summary>
+        public string Id { get; set; }
         public string Subject { get; set; }
         public string Html { get; set; }
         public string Text { get; set; }

@@ -9,7 +9,7 @@ The examples below assume you have an `IHeloApiClient helo` — see the
 | ------ | ------------ | ----------- |
 | [**SendTransactional**](#sendtransactional) | **POST** /send/transactional | Send a transactional email |
 | [**SendTransactionalBatch**](#sendtransactionalbatch) | **POST** /send/transactional/batch | Send transactional emails in batch |
-| [**SendBroadcast**](#sendbroadcast) | **POST** /send/broadcast |  |
+| [**SendBroadcast**](#sendbroadcast) | **POST** /send/broadcast | Send a broadcast |
 | [**SendBroadcastMessage**](#sendbroadcastmessage) | **POST** /send/broadcast/message | Send a single broadcast email |
 
 ## SendTransactional
@@ -63,6 +63,8 @@ var sendMessageBatch = await helo.Sending.SendTransactionalBatch(new SendMessage
 
 `POST /send/broadcast`
 
+Sends a broadcast of multiple messages for marketing or announcement purposes.
+
 ```csharp Sending_sendBroadcast
 using HeloEmail.Sdk;
 using HeloEmail.Sdk.Sending;
@@ -72,6 +74,7 @@ var sendBroadcast = await helo.Sending.SendBroadcast(new SendBroadcastRequest
     From = new MailAddress { Email = "test@example.com", Name = "test-name" },
     Template = new SendBroadcastRequestTemplate
     {
+        Id = "550e8400-e29b-41d4-a716-446655440000",
         Subject = "test-subject",
         Html = "test-html",
         Text = "test-text",

@@ -20,6 +20,9 @@ namespace HeloEmail.Sdk.Sending
             string channelId = null,
             string idempotencyKey = null);
 
+        /// <summary>
+        /// Send a broadcast
+        /// </summary>
         Task<SendBroadcastResponse> SendBroadcast(
             SendBroadcastRequest request,
             string channelId = null,
