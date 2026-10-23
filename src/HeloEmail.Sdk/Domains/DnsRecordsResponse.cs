@@ -7,5 +7,6 @@ namespace HeloEmail.Sdk.Domains
         public DnsRecordResponse DomainKeyActive { get; set; }
         public DnsRecordResponse DomainKeyPending { get; set; }
         public List<DnsRecordResponse> ReturnPath { get; set; }
+        public DnsRecordResponse Tracking { get; set; }
     }
 }

@@ -5,6 +5,7 @@ using HeloEmail.Sdk.Domains;
 using HeloEmail.Sdk.Sending;
 using HeloEmail.Sdk.Statistics;
 using HeloEmail.Sdk.Suppressions;
+using HeloEmail.Sdk.Templates;
 using HeloEmail.Sdk.Webhooks;
 
 namespace HeloEmail.Sdk
@@ -21,6 +22,7 @@ namespace HeloEmail.Sdk
         ISendingClient Sending { get; }
         IStatisticsClient Statistics { get; }
         ISuppressionsClient Suppressions { get; }
+        ITemplatesClient Templates { get; }
         IWebhooksClient Webhooks { get; }
     }
 }

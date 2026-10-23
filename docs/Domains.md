@@ -40,6 +40,7 @@ var domainWithDns = await helo.Domains.Create(new CreateDomainRequest
 {
     Name = "test-name",
     ChannelIds = ["550e8400-e29b-41d4-a716-446655440000"],
+    EnableCustomTracking = true,
 });
 ```
 
@@ -67,6 +68,7 @@ using HeloEmail.Sdk.Domains;
 var domain = await helo.Domains.Update("550e8400-e29b-41d4-a716-446655440000", new UpdateDomainRequest
 {
     ChannelIds = ["550e8400-e29b-41d4-a716-446655440000"],
+    EnableCustomTracking = true,
 });
 ```
 

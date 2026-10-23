@@ -32,6 +32,7 @@ public class DomainsTests : BaseFixture
         {
             Name = "test-name",
             ChannelIds = ["550e8400-e29b-41d4-a716-446655440000"],
+            EnableCustomTracking = true,
         });
 
         Assert.NotNull(result);
@@ -59,6 +60,7 @@ public class DomainsTests : BaseFixture
         var result = await client.Update("550e8400-e29b-41d4-a716-446655440000", new UpdateDomainRequest
         {
             ChannelIds = ["550e8400-e29b-41d4-a716-446655440000"],
+            EnableCustomTracking = true,
         });
 
         Assert.NotNull(result);

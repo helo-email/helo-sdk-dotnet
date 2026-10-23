@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.0
+
+- Added sending template management
+- Added support for custom tracking domains
+
 ## 1.1.0
 
 - Added `id` to the `template` of transactional and broadcast send requests, to send a stored template

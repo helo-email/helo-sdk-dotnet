@@ -63,6 +63,7 @@ self-configured client stay identifiable in the API logs.
 | `Sending` | [docs/Sending.md](docs/Sending.md) |
 | `Statistics` | [docs/Statistics.md](docs/Statistics.md) |
 | `Suppressions` | [docs/Suppressions.md](docs/Suppressions.md) |
+| `Templates` | [docs/Templates.md](docs/Templates.md) |
 | `Webhooks` | [docs/Webhooks.md](docs/Webhooks.md) |
 
 ## Error handling
