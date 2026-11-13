@@ -21,12 +21,17 @@ namespace HeloEmail.Sdk
         /// <param name="services">Service collection.</param>
         /// <param name="apiKey">Optional API key. Pulled from HELO_API_KEY environment variable otherwise.</param>
         /// <param name="baseUrl">Optional base URL.</param>
+        /// <param name="maxRetries">How many times a failed request is retried; 0 disables retries.
+        /// See <see cref="RetryHandler"/> for which requests are retried.</param>
+        /// <param name="timeout">How long each attempt may take before it is abandoned and retried
+        /// (default 30 seconds); <see cref="System.Threading.Timeout.InfiniteTimeSpan"/> disables it.</param>
         public static void AddHelo(this IServiceCollection services, string apiKey = null,
-            string baseUrl = "https://api.helohq.com")
+            string baseUrl = "https://api.helohq.com", int maxRetries = RetryHandler.DefaultMaxRetries,
+            TimeSpan? timeout = null)
         {
             apiKey = apiKey ?? Environment.GetEnvironmentVariable("HELO_API_KEY");
             services.AddHeloApiClients();
-            services.AddHeloHttpClient(apiKey, baseUrl);
+            services.AddHeloHttpClient(apiKey, baseUrl, maxRetries, timeout);
         }
 
         /// <summary>
@@ -50,7 +55,7 @@ namespace HeloEmail.Sdk
         }
 
         private static void AddHeloHttpClient(this IServiceCollection services, string apiKey,
-            string baseUrl = "https://api.helohq.com")
+            string baseUrl, int maxRetries, TimeSpan? timeout)
         {
             var baseUri = new Uri(baseUrl);
             services
@@ -59,7 +64,11 @@ namespace HeloEmail.Sdk
                     c.BaseAddress = baseUri;
                     c.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
                     c.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", SdkUserAgent.Value);
+                    // RetryHandler times each attempt; HttpClient's 100s would cover all of them together.
+                    if (timeout != System.Threading.Timeout.InfiniteTimeSpan)
+                        c.Timeout = System.Threading.Timeout.InfiniteTimeSpan;
                 })
+                .AddHttpMessageHandler(() => new RetryHandler(maxRetries, timeout))
                 .AddAsKeyed();
         }
     }

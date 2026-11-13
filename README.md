@@ -42,9 +42,14 @@ builder.Services
         c.BaseAddress = new Uri("https://api.helohq.com");
         c.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
         c.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", SdkUserAgent.Value);
+        c.Timeout = Timeout.InfiniteTimeSpan; // RetryHandler times each attempt instead
     })
+    .AddHttpMessageHandler(() => new RetryHandler())
     .AddAsKeyed();
 ```
+
+Add `RetryHandler` as shown to get the SDK's automatic retries and per-attempt timeout on your
+own client, and turn off `HttpClient.Timeout`, which would otherwise cover all the attempts together.
 
 `SdkUserAgent.Value` names the package, its version and the runtime it is on.
 `AddHelo` sends it for you; send it here too so requests from a
@@ -185,6 +190,38 @@ if (webhookPayload is EmailDeliveredWebhookPayload emailDelivered)
 ```csharp
 services.AddHelo(apiKey, baseUrl: "https://api.helohq.com");
 ```
+
+## Automatic retries
+
+A request that fails with a network error, a timeout, or a `408`, `429`, `500`, `502`, `503` or
+`504` response is retried up to 2 times, with exponential backoff and full jitter. It
+is only retried when sending it again can't do anything twice: a `GET`, `PUT` or `DELETE`,
+or a request carrying an idempotency key. A `429` is always retried, since the server
+refused the request without acting on it. A `Retry-After` header is honoured; one asking
+for more than 8 seconds is not retried early, and the error is returned instead.
+
+Operations that take an idempotency key generate one for each call when you don't pass
+one, and send it on every retry, so a send whose response was lost is never sent twice.
+Pass your own key to make your own retries (a background job run again, say) safe too.
+
+`AddHelo` takes `maxRetries` to change how many, or `0` to disable them. Retries are done by `RetryHandler`, a `DelegatingHandler` in the registered `HttpClient`'s pipeline. Each attempt times out after 30 seconds (`timeout` to change it) and is then retried like a network failure; `AddHelo` turns off `HttpClient.Timeout` so it doesn't cut the attempts short.
+
+## Clearing a field
+
+A null property isn't sent, so it leaves the field as it is. To clear a field the API accepts
+`null` for, name the property in the request's `NullFields` (its doc comment lists which ones):
+
+```csharp
+var request = new UpdateTemplateRequest();
+request.NullFields.Add(nameof(UpdateTemplateRequest.Text));
+```
+
+## Enums in responses
+
+Every enum has an `Unknown` member, which a value added to the API after this SDK version was
+released parses as, so an older SDK keeps working. `Unknown` can't be sent in a request.
+`WebhookParser.Parse` likewise returns `null` for an event type the SDK doesn't know, so you can
+acknowledge events you don't handle.
 
 ## Requirements
 

@@ -34,6 +34,27 @@ public class SendingTests : BaseFixture
         Assert.True(handler.Request!.Headers.Contains("X-Helo-Idempotency-Key"));
     }
 
+    // A send whose response is lost must not be sent twice: without a key from the
+    // caller, the SDK generates one per call, which RetryHandler reuses on a retry.
+    [Fact]
+    public async Task SendTransactional_GeneratesAnIdempotencyKey()
+    {
+        var (client, handler) = CreateClient();
+
+        await client.SendTransactional(new SendMessageRequest
+        {
+            From = new MailAddress { Email = "from@yourdomain.com", Name = "From name" },
+            To = [new MailAddress { Email = "to@example.com", Name = "To name" }],
+            Subject = "Hello from Helo",
+            Html = "<html><body><h1>Hi there, new friend.</h1><p>This is a test message, delivered with <3 by Helo. </p></body></html>",
+            Text = "This is a test message, delivered with <3 by Helo.",
+            Tags = ["welcome", "onboarding"],
+        }, channelId: "550e8400-e29b-41d4-a716-446655440000");
+
+        var key = Assert.Single(handler.Request!.Headers.GetValues("X-Helo-Idempotency-Key"));
+        Assert.True(Guid.TryParse(key, out _), key);
+    }
+
     [Fact]
     public async Task SendTransactionalBatch_SendsExpectedRequest()
     {
@@ -61,6 +82,32 @@ public class SendingTests : BaseFixture
         Assert.True(handler.Request!.Headers.Contains("X-Helo-Idempotency-Key"));
     }
 
+    // A send whose response is lost must not be sent twice: without a key from the
+    // caller, the SDK generates one per call, which RetryHandler reuses on a retry.
+    [Fact]
+    public async Task SendTransactionalBatch_GeneratesAnIdempotencyKey()
+    {
+        var (client, handler) = CreateClient();
+
+        await client.SendTransactionalBatch(new SendMessageBatchRequest
+        {
+            Requests = [
+                new SendMessageRequest
+                {
+                    From = new MailAddress { Email = "from@yourdomain.com", Name = "From name" },
+                    To = [new MailAddress { Email = "to@example.com", Name = "To name" }],
+                    Subject = "Hello from Helo",
+                    Html = "<html><body><h1>Hi there, new friend.</h1><p>This is a test message, delivered with <3 by Helo. </p></body></html>",
+                    Text = "This is a test message, delivered with <3 by Helo.",
+                    Tags = ["welcome", "onboarding"],
+                },
+            ],
+        }, channelId: "550e8400-e29b-41d4-a716-446655440000");
+
+        var key = Assert.Single(handler.Request!.Headers.GetValues("X-Helo-Idempotency-Key"));
+        Assert.True(Guid.TryParse(key, out _), key);
+    }
+
     [Fact]
     public async Task SendBroadcast_SendsExpectedRequest()
     {
@@ -71,10 +118,9 @@ public class SendingTests : BaseFixture
             From = new MailAddress { Email = "test@example.com", Name = "test-name" },
             Template = new SendBroadcastRequestTemplate
             {
-                Id = "550e8400-e29b-41d4-a716-446655440000",
-                Subject = "test-subject",
-                Html = "test-html",
-                Text = "test-text",
+                Subject = "Hello, {{name}}",
+                Html = "<html><body><h1>Hi {{name}}.</h1><p>This is a broadcast, delivered with <3 by Helo.</p></body></html>",
+                Text = "Hi {{name}}. This is a broadcast, delivered with <3 by Helo.",
                 InlineStyles = true,
             },
             Tags = ["test-tag"],
@@ -92,6 +138,37 @@ public class SendingTests : BaseFixture
         Assert.Equal("/send/broadcast", handler.Request!.RequestUri!.AbsolutePath);
         Assert.True(handler.Request!.Headers.Contains("X-Helo-Channel-Id"));
         Assert.True(handler.Request!.Headers.Contains("X-Helo-Idempotency-Key"));
+    }
+
+    // A send whose response is lost must not be sent twice: without a key from the
+    // caller, the SDK generates one per call, which RetryHandler reuses on a retry.
+    [Fact]
+    public async Task SendBroadcast_GeneratesAnIdempotencyKey()
+    {
+        var (client, handler) = CreateClient();
+
+        await client.SendBroadcast(new SendBroadcastRequest
+        {
+            From = new MailAddress { Email = "test@example.com", Name = "test-name" },
+            Template = new SendBroadcastRequestTemplate
+            {
+                Subject = "Hello, {{name}}",
+                Html = "<html><body><h1>Hi {{name}}.</h1><p>This is a broadcast, delivered with <3 by Helo.</p></body></html>",
+                Text = "Hi {{name}}. This is a broadcast, delivered with <3 by Helo.",
+                InlineStyles = true,
+            },
+            Tags = ["test-tag"],
+            Messages = [
+                new SendBroadcastRequestMessage
+                {
+                    To = [new MailAddress { Email = "test@example.com", Name = "test-name" }],
+                    Tags = ["test-tag"],
+                },
+            ],
+        }, channelId: "550e8400-e29b-41d4-a716-446655440000");
+
+        var key = Assert.Single(handler.Request!.Headers.GetValues("X-Helo-Idempotency-Key"));
+        Assert.True(Guid.TryParse(key, out _), key);
     }
 
     [Fact]
@@ -114,5 +191,26 @@ public class SendingTests : BaseFixture
         Assert.Equal("/send/broadcast/message", handler.Request!.RequestUri!.AbsolutePath);
         Assert.True(handler.Request!.Headers.Contains("X-Helo-Channel-Id"));
         Assert.True(handler.Request!.Headers.Contains("X-Helo-Idempotency-Key"));
+    }
+
+    // A send whose response is lost must not be sent twice: without a key from the
+    // caller, the SDK generates one per call, which RetryHandler reuses on a retry.
+    [Fact]
+    public async Task SendBroadcastMessage_GeneratesAnIdempotencyKey()
+    {
+        var (client, handler) = CreateClient();
+
+        await client.SendBroadcastMessage(new SendMessageRequest
+        {
+            From = new MailAddress { Email = "from@yourdomain.com", Name = "From name" },
+            To = [new MailAddress { Email = "to@example.com", Name = "To name" }],
+            Subject = "Hello from Helo",
+            Html = "<html><body><h1>Hi there, new friend.</h1><p>This is a test message, delivered with <3 by Helo. </p></body></html>",
+            Text = "This is a test message, delivered with <3 by Helo.",
+            Tags = ["welcome", "onboarding"],
+        }, channelId: "550e8400-e29b-41d4-a716-446655440000");
+
+        var key = Assert.Single(handler.Request!.Headers.GetValues("X-Helo-Idempotency-Key"));
+        Assert.True(Guid.TryParse(key, out _), key);
     }
 }

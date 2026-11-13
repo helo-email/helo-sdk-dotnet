@@ -7,19 +7,19 @@ The examples below assume you have an `IHeloApiClient helo` — see the
 
 | Method | HTTP request | Description |
 | ------ | ------------ | ----------- |
-| [**List**](#list) | **GET** /templates |  |
-| [**Create**](#create) | **POST** /templates |  |
-| [**RenderDraft**](#renderdraft) | **POST** /templates/render |  |
-| [**Retrieve**](#retrieve) | **GET** /templates/{id} |  |
-| [**Update**](#update) | **PATCH** /templates/{id} |  |
-| [**Delete**](#delete) | **DELETE** /templates/{id} |  |
-| [**Render**](#render) | **POST** /templates/{id}/render |  |
+| [**List**](#list) | **GET** /templates | List all templates |
+| [**Create**](#create) | **POST** /templates | Create a template |
+| [**RenderDraft**](#renderdraft) | **POST** /templates/render | Render template content |
+| [**Retrieve**](#retrieve) | **GET** /templates/{id} | Retrieve a template |
+| [**Update**](#update) | **PATCH** /templates/{id} | Update a template |
+| [**Delete**](#delete) | **DELETE** /templates/{id} | Delete a template |
+| [**Render**](#render) | **POST** /templates/{id}/render | Render a template |
 
 ## List
 
 `GET /templates`
 
-Fetch a paginated list of templates.
+Retrieves a paginated list of templates, optionally filtered by name or channel.
 
 ```csharp Templates_list
 using HeloEmail.Sdk.Templates;
@@ -31,7 +31,7 @@ var paginatedResponseOfTemplateSummary = await helo.Templates.List(limit: 10, of
 
 `POST /templates`
 
-Create a new template.
+Creates a new template from HTML, MJML, or plain-text content. MJML is compiled to HTML when the template is saved.
 
 ```csharp Templates_create
 using HeloEmail.Sdk.Templates;
@@ -51,7 +51,7 @@ var template = await helo.Templates.Create(new CreateTemplateRequest
 
 `POST /templates/render`
 
-Render ad-hoc template content (Subject/Html/Text) with sample data, without persisting anything.
+Renders unsaved template content (subject, HTML or MJML, and text) with sample data, without persisting anything.
 
 ```csharp Templates_renderDraft
 using HeloEmail.Sdk.Templates;
@@ -70,7 +70,7 @@ var renderTemplate = await helo.Templates.RenderDraft(new RenderDraftRequest
 
 `GET /templates/{id}`
 
-Fetch a single template.
+Fetches the details and content of a specific template.
 
 ```csharp Templates_retrieve
 using HeloEmail.Sdk.Templates;
@@ -82,7 +82,7 @@ var template = await helo.Templates.Retrieve("550e8400-e29b-41d4-a716-4466554400
 
 `PATCH /templates/{id}`
 
-Update an existing template.
+Modifies an existing template. Only the provided fields are changed.
 
 ```csharp Templates_update
 using HeloEmail.Sdk.Templates;
@@ -103,7 +103,7 @@ var template = await helo.Templates.Update("550e8400-e29b-41d4-a716-446655440000
 
 `DELETE /templates/{id}`
 
-Delete a template.
+Permanently removes a template. This action cannot be undone.
 
 ```csharp Templates_delete
 using HeloEmail.Sdk.Templates;
@@ -115,7 +115,7 @@ await helo.Templates.Delete("550e8400-e29b-41d4-a716-446655440000");
 
 `POST /templates/{id}/render`
 
-Render a saved template with sample data.
+Renders a saved template with sample data, to preview the output before sending.
 
 ```csharp Templates_render
 using HeloEmail.Sdk.Templates;

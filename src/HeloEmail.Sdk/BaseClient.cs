@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using HeloEmail.Sdk.Errors;
@@ -20,11 +21,11 @@ namespace HeloEmail.Sdk
     public static class SdkUserAgent
     {
         /// <summary>The header value, e.g.
-        /// <c>HeloEmail.Sdk/1.2.0 (.NET 10.0.0; macos/Arm64)</c>. The framework
+        /// <c>HeloEmail.Sdk/1.3.0 (.NET 10.0.0; macos/Arm64)</c>. The framework
         /// and platform are those of the process the SDK is running in, not the
         /// netstandard2.0 the package targets.</summary>
         public static readonly string Value =
-            $"HeloEmail.Sdk/1.2.0 " +
+            $"HeloEmail.Sdk/1.3.0 " +
             $"({Framework()}; {PlatformName()}/{RuntimeInformation.OSArchitecture})";
 
         // FrameworkDescription is free-form (".NET Framework 4.8.9032.0",
@@ -70,7 +71,8 @@ namespace HeloEmail.Sdk
                 {
                     DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                 };
-            serializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.KebabCaseLower));
+            // Enums carry their own converter (ApiEnumConverter), which also reads values
+            // this SDK doesn't know; one here would take precedence over it.
             return serializerOptions;
         }
 
@@ -145,7 +147,7 @@ namespace HeloEmail.Sdk
         /// so query strings and request bodies agree.
         /// </summary>
         protected static string ToQueryValue<TEnum>(TEnum value) where TEnum : struct, Enum =>
-            JsonNamingPolicy.KebabCaseLower.ConvertName(value.ToString());
+            ApiEnumConverter<TEnum>.WireValue(value);
 
         /// <summary>
         /// Renders an optional enum as its wire value, or null when unset so that
@@ -169,9 +171,26 @@ namespace HeloEmail.Sdk
             return _httpClient.SendAsync(request);
         }
 
-        private static StringContent Serialize(object body) =>
-            new StringContent(JsonSerializer.Serialize(body, body.GetType(), SerializerOptions),
-                Encoding.UTF8, "application/json");
+        private static StringContent Serialize(object body)
+        {
+            var json = JsonSerializer.Serialize(body, body.GetType(), SerializerOptions);
+            var clearing = body as IHasNullFields;
+            if (clearing != null && clearing.NullFields != null && clearing.NullFields.Count > 0)
+            {
+                var fields = JsonNode.Parse(json).AsObject();
+                foreach (var name in clearing.NullFields)
+                {
+                    string wire;
+                    if (!clearing.NullableFields.TryGetValue(name, out wire))
+                        throw new ArgumentException(
+                            $"NullFields: \"{name}\" can't be null (only {string.Join(", ", clearing.NullableFields.Keys)} can)");
+                    fields[wire] = null;
+                }
+                json = fields.ToJsonString();
+            }
+
+            return new StringContent(json, Encoding.UTF8, "application/json");
+        }
 
         private ApiErrorException HandleError(string content, HttpStatusCode statusCode)
         {

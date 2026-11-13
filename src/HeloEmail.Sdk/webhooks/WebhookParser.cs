@@ -25,6 +25,11 @@ namespace HeloEmail.Sdk.Webhooks
             [WebhookEvent.ReturnPathDomainVerificationFailed] = typeof(ReturnPathDomainVerificationFailedPayload),
         };
 
+        /// <summary>
+        /// Deserializes a webhook payload into the class for its event type. Returns null when the
+        /// payload has no event type, or one this version of the SDK doesn't know (an event the API
+        /// added later), so a receiver can acknowledge events it doesn't handle.
+        /// </summary>
         public static object Parse(string webhookPayload)
         {
             var jsonNode = JsonNode.Parse(webhookPayload);
@@ -34,28 +39,12 @@ namespace HeloEmail.Sdk.Webhooks
                 return null;
             }
 
-            var eventParsed = ParseKebabCase(eventTypeStr);
+            // ApiEnumConverter reads an event type the SDK doesn't know as its unknown member.
+            var eventParsed = jsonNode["eventType"].Deserialize<WebhookEvent>();
 
-            return !PayloadTypes.TryGetValue(eventParsed, out var payloadType)
-                ? throw new ArgumentOutOfRangeException(nameof(webhookPayload), eventParsed,
-                    "Unrecognized webhook event type.")
-                : jsonNode.Deserialize(payloadType);
+            return PayloadTypes.TryGetValue(eventParsed, out var payloadType)
+                ? jsonNode.Deserialize(payloadType)
+                : null;
         }
-
-        private static WebhookEvent ParseKebabCase(string value)
-        {
-            if (string.IsNullOrEmpty(value))
-            {
-                throw new JsonException($"Cannot convert null/empty string to {nameof(WebhookEvent)}.");
-            }
-
-            var pascalCase = string.Concat(value.Split('-').Select(CapitalizeFirst));
-            return !Enum.TryParse(pascalCase, ignoreCase: true, out WebhookEvent result)
-                ? throw new JsonException($"Unable to parse \"{value}\" as {nameof(WebhookEvent)}.")
-                : result;
-        }
-
-        private static string CapitalizeFirst(string s)
-            => string.IsNullOrEmpty(s) ? s : char.ToUpperInvariant(s[0]) + s.Substring(1);
     }
 }

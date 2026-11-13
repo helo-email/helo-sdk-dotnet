@@ -1,11 +1,12 @@
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace HeloEmail.Sdk.Webhooks
 {
     /// <summary>
     /// Request body for updating a webhook. Only provided fields are changed.
     /// </summary>
-    public class UpdateWebhookRequest
+    public class UpdateWebhookRequest : IHasNullFields
     {
         /// <summary>
         /// New delivery URL. Must be HTTPS.
@@ -31,5 +32,20 @@ namespace HeloEmail.Sdk.Webhooks
         /// Enables or disables the webhook.
         /// </summary>
         public bool? Enabled { get; set; }
+
+        /// <summary>
+        /// Properties to send as null, which clears them: <c>ChannelId</c>, <c>AdditionalHeaders</c>.
+        /// Leaving a property null leaves the field as it is.
+        /// </summary>
+        [JsonIgnore]
+        public List<string> NullFields { get; } = new List<string>();
+
+        private static readonly IReadOnlyDictionary<string, string> ClearableFields = new Dictionary<string, string>
+        {
+            ["ChannelId"] = "channelId",
+            ["AdditionalHeaders"] = "additionalHeaders",
+        };
+
+        IReadOnlyDictionary<string, string> IHasNullFields.NullableFields => ClearableFields;
     }
 }

@@ -5,9 +5,24 @@ namespace HeloEmail.Sdk.Templates
     /// </summary>
     public class RenderDraftRequest
     {
+        /// <summary>
+        /// Maximum 256 characters.
+        /// </summary>
         public string Subject { get; set; }
+
+        /// <summary>
+        /// Maximum 500,000 characters.
+        /// </summary>
         public string Html { get; set; }
+
+        /// <summary>
+        /// Maximum 500,000 characters. The html it compiles to must also be within the html limit.
+        /// </summary>
         public string Mjml { get; set; }
+
+        /// <summary>
+        /// Maximum 100,000 characters.
+        /// </summary>
         public string Text { get; set; }
 
         /// <summary>

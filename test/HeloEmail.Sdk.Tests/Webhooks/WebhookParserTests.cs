@@ -31,4 +31,12 @@ public class WebhookParserTests
 
         Assert.IsType(webhookType, parsed);
     }
+
+    // An event added to the API after this SDK was released is skipped, not an error,
+    // so a receiver can acknowledge it.
+    [Fact]
+    public void WebhookParser_Parse_ReturnsNullForAnEventTypeItDoesNotKnow()
+    {
+        Assert.Null(WebhookParser.Parse("""{ "eventType": "added-later" }"""));
+    }
 }

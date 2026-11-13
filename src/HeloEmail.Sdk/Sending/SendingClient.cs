@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -25,8 +26,8 @@ namespace HeloEmail.Sdk.Sending
             var headers = new Dictionary<string, string>();
             if (channelId != null)
                 headers["X-Helo-Channel-Id"] = channelId;
-            if (idempotencyKey != null)
-                headers["X-Helo-Idempotency-Key"] = idempotencyKey;
+            // Generated once per call, so a retry is recognized as the same request.
+            headers["X-Helo-Idempotency-Key"] = idempotencyKey ?? Guid.NewGuid().ToString();
 
             return Post<SendMessageRequest, SendMessageAcceptedResponse>("/send/transactional", request, headers);
         }
@@ -42,8 +43,8 @@ namespace HeloEmail.Sdk.Sending
             var headers = new Dictionary<string, string>();
             if (channelId != null)
                 headers["X-Helo-Channel-Id"] = channelId;
-            if (idempotencyKey != null)
-                headers["X-Helo-Idempotency-Key"] = idempotencyKey;
+            // Generated once per call, so a retry is recognized as the same request.
+            headers["X-Helo-Idempotency-Key"] = idempotencyKey ?? Guid.NewGuid().ToString();
 
             return Post<SendMessageBatchRequest, SendMessageBatchResponse>("/send/transactional/batch", request, headers);
         }
@@ -59,8 +60,8 @@ namespace HeloEmail.Sdk.Sending
             var headers = new Dictionary<string, string>();
             if (channelId != null)
                 headers["X-Helo-Channel-Id"] = channelId;
-            if (idempotencyKey != null)
-                headers["X-Helo-Idempotency-Key"] = idempotencyKey;
+            // Generated once per call, so a retry is recognized as the same request.
+            headers["X-Helo-Idempotency-Key"] = idempotencyKey ?? Guid.NewGuid().ToString();
 
             return Post<SendBroadcastRequest, SendBroadcastResponse>("/send/broadcast", request, headers);
         }
@@ -76,8 +77,8 @@ namespace HeloEmail.Sdk.Sending
             var headers = new Dictionary<string, string>();
             if (channelId != null)
                 headers["X-Helo-Channel-Id"] = channelId;
-            if (idempotencyKey != null)
-                headers["X-Helo-Idempotency-Key"] = idempotencyKey;
+            // Generated once per call, so a retry is recognized as the same request.
+            headers["X-Helo-Idempotency-Key"] = idempotencyKey ?? Guid.NewGuid().ToString();
 
             return Post<SendMessageRequest, SendMessageAcceptedResponse>("/send/broadcast/message", request, headers);
         }
