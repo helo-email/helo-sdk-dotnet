@@ -45,6 +45,7 @@ using HeloEmail.Sdk.Sending;
 
 var sendMessageBatch = await helo.Sending.SendTransactionalBatch(new SendMessageBatchRequest
 {
+    Validation = BatchValidationMode.Strict,
     Requests = [
         new SendMessageRequest
         {

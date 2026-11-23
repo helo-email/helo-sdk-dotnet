@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.4.0
+
+- Added `validation` parameter to batch sending requests, allowing control over the processing behaviour of partial failures.
+
 ## 1.3.0
 
 - Added automatic retries through `RetryHandler`, which `AddHelo` adds to the client it

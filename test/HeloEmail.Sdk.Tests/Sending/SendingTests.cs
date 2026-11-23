@@ -62,6 +62,7 @@ public class SendingTests : BaseFixture
 
         var result = await client.SendTransactionalBatch(new SendMessageBatchRequest
         {
+            Validation = BatchValidationMode.Strict,
             Requests = [
                 new SendMessageRequest
                 {
@@ -91,6 +92,7 @@ public class SendingTests : BaseFixture
 
         await client.SendTransactionalBatch(new SendMessageBatchRequest
         {
+            Validation = BatchValidationMode.Strict,
             Requests = [
                 new SendMessageRequest
                 {
